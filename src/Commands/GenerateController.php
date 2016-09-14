@@ -66,7 +66,7 @@ class GenerateController extends GeneratorCommand
     {
         $name = str_replace($this->laravel->getNamespace(), '', $name);
 
-        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'Controller.php';
+        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'/'.$this->getFormattedNameInput().'Controller.php';
     }
 
     /**

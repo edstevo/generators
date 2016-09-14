@@ -121,9 +121,9 @@ abstract class DaoBase implements DaoBaseContract
     /**
      * Update the specified resource in the DB.
      *
-     * @param array $data
-     * @param $id
-     * @param string $attribute
+     * @param   array   $data
+     * @param   int     $id
+     * @param   string  $attribute
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */

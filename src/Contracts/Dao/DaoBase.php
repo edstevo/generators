@@ -66,12 +66,13 @@ interface DaoBase
     /**
      * Update the specified resource in the DB.
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   array                               $data
+     * @param   array   $data
+     * @param   int     $id
+     * @param   string  $attribute
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function update(array $data, $id);
+    public function update(array $data, $id, $attribute = "id");
 
     /**
      * Remove an entry for the specified resource from the DB.
