@@ -7,6 +7,11 @@
             "email": "edward.stephenson@me.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "FlowflexComponents\\Generators\\": "src/"
+        }
+    },
     "version": "1.0.0",
     "require": {}
 }
