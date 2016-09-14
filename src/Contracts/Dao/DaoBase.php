@@ -4,7 +4,7 @@
  *  This was created by Ed Stephenson (edward@flowflex.com).
  *  You must get permission to use this work.
  */
-namespace Flowflex\Generators\Contracts\Dao;
+namespace FlowflexComponents\Generators\Contracts\Dao;
 
 interface DaoBase
 {

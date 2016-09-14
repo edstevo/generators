@@ -1,8 +1,8 @@
 <?php
 
-namespace Flowflex\Generators;
+namespace FlowflexComponents\Generators;
 
-use Flowflex\Generators\Commands\Creators\DaoCreator;
+use FlowflexComponents\Generators\Commands\Creators\DaoCreator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
@@ -10,12 +10,12 @@ class GeneratorsServiceProvider extends ServiceProvider
 {
 
 	protected $commandArray	= [
-		'Flowflex\Generators\Commands\GenerateController',
-		'Flowflex\Generators\Commands\GenerateDaoEvent',
-		'Flowflex\Generators\Commands\GenerateDaoRepository',
-		'Flowflex\Generators\Commands\GenerateModel',
-		'Flowflex\Generators\Commands\GenerateRequest',
-		'Flowflex\Generators\Commands\InstallDaoSystem'
+		'FlowflexComponents\Generators\Commands\GenerateController',
+		'FlowflexComponents\Generators\Commands\GenerateDaoEvent',
+		'FlowflexComponents\Generators\Commands\GenerateDaoRepository',
+		'FlowflexComponents\Generators\Commands\GenerateModel',
+		'FlowflexComponents\Generators\Commands\GenerateRequest',
+		'FlowflexComponents\Generators\Commands\InstallDaoSystem'
 	];
 
 	/**

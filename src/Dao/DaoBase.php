@@ -5,11 +5,11 @@
  *  You must get permission to use this work.
  */
 
-namespace Flowflex\Generators\Dao;
+namespace FlowflexComponents\Generators\Dao;
 
 
-use Flowflex\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
-use Flowflex\Generators\Dao\Exceptions\RepositoryException;
+use FlowflexComponents\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
+use FlowflexComponents\Generators\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class DaoBase implements DaoBaseContract

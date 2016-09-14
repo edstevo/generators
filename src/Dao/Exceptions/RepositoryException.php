@@ -1,6 +1,6 @@
 <?php
 
-namespace Flowflex\Generators\Dao\Exceptions;
+namespace FlowflexComponents\Generators\Dao\Exceptions;
 
 class RepositoryException extends \Exception
 {

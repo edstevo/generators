@@ -1,6 +1,6 @@
 <?php
 
-namespace Flowflex\Generators\Commands;
+namespace FlowflexComponents\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 

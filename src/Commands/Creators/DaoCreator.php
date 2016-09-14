@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace Flowflex\Generators\Commands\Creators;
+namespace FlowflexComponents\Generators\Commands\Creators;
 
 
 use Illuminate\Filesystem\Filesystem;
@@ -66,7 +66,7 @@ class DaoCreator
 
     private function renameNamespace($file)
     {
-        return str_replace("Flowflex\Generators\\", app()->getNamespace(), $file);
+        return str_replace("FlowflexComponents\Generators\\", app()->getNamespace(), $file);
     }
 
     public function install()
