@@ -82,4 +82,18 @@ interface DaoBase
      * @return  boolean
      */
     public function destroy($model);
+
+    /**
+     * Get the validation rules associated with a model
+     *
+     * @return  array
+     */
+    public function getRules();
+
+    /**
+     * Throw exception when model cannot be found
+     *
+     * @throws  \FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException
+     */
+    public function notFound();
 }
