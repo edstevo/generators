@@ -127,7 +127,7 @@ abstract class DaoBase implements DaoBaseContract
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function update(array $data, $id, $attribute = "id")
+    public function update($data, $id, $attribute = "id")
     {
         return $this->model->where($attribute, '=', $id)->update($data);
     }
