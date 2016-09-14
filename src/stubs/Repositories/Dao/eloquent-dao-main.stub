@@ -28,7 +28,7 @@ class $CLASSNAMEDao extends DaoBase
 
     public function update(array $data, $id, $attribute = "id")
     {
-        $updated_model  = parent::update($data, $id, $attribute)
+        $updated_model  = parent::update($data, $id, $attribute);
 
         event(new $MODELNAMEUpdated($updated_model));
 
