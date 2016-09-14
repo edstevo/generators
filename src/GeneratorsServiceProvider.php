@@ -35,15 +35,8 @@ class GeneratorsServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->publishDaoFiles();
 		$this->publishConfigFiles();
 		$this->registerCommands();
-	}
-
-	private function publishDaoFiles()
-	{
-		$daoCreator	 = new DaoCreator(new Filesystem());
-		$daoCreator->install();
 	}
 
 	private function publishConfigFiles()
