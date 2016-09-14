@@ -1,0 +1,49 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Dao\DaoBase;
+use App\Models\$MODELNAME;
+
+use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMECreated;
+use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEUpdated;
+use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEDestroyed;
+
+class $CLASSNAMEDao extends DaoBase
+{
+
+    protected function model()
+    {
+        return $MODELNAME::class;
+    }
+
+    public function store($data)
+    {
+        $new_model      = parent::store($data);
+
+        event(new $MODELNAMECreated($new_model));
+
+        return $new_model;
+    }
+
+    public function update($model, $data)
+    {
+        $updated_model  = parent::update($model, $data);
+
+        event(new $MODELNAMEUpdated($updated_model));
+
+        return $updated_model;
+    }
+
+    public function destroy($model)
+    {
+        $result         = parent::destroy($model);
+
+        if ($result)
+        {
+            event(new $MODELNAMEDestroyed($model));
+        }
+
+        return $result;
+    }
+}

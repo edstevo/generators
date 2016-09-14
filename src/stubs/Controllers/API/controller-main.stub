@@ -1,0 +1,86 @@
+<?php
+
+namespace $CONTROLLERNAMESPACE;
+
+use Illuminate\Http\Request;
+
+use $ROOTNAMESPACEHttp\Requests;
+use $ROOTNAMESPACEHttp\Controllers\Controller;
+
+//  Dao Repository
+use $ROOTNAMESPACEDao\$MODELNAME\Eloquent\$MODELNAMEDao;
+
+//  Requests
+use $ROOTNAMESPACEHttp\Requests\$MODELNAME\$MODELNAME\Create$MODELNAMERequest;
+use $ROOTNAMESPACEHttp\Requests\$MODELNAME\$MODELNAME\Update$MODELNAMERequest;
+use $ROOTNAMESPACEHttp\Requests\$MODELNAME\$MODELNAME\Destroy$MODELNAMERequest;
+
+class $MODELNAMEController extends Controller
+{
+    protected $$MODELVARIABLE;
+
+    public function __construct($MODELNAMEDao $$MODELVARIABLE)
+    {
+        $this->$MODELVARIABLE   = $$MODELVARIABLE;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return response()->make($this->$MODELVARIABLE->all());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Create$MODELNAMERequest $request)
+    {
+        $$MODELVARIABLEData   = $this->getRequestData($request);
+        return response()->make($this->$MODELVARIABLE->store($$MODELVARIABLEData));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return response()->make($this->$MODELVARIABLE->findOrFail($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Update$MODELNAMERequest $request, $id)
+    {
+        $$MODELVARIABLE        = $this->$MODELVARIABLE->find($id);
+        $$MODELVARIABLEData    = $this->getRequestData($request);
+
+        return response()->make($this->$MODELVARIABLE->update($$MODELVARIABLE, $$MODELVARIABLEData));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Destroy$MODELNAMERequest $id)
+    {
+        $$MODELVARIABLE       = $this->$MODELVARIABLE->find($id);
+        return response()->make($this->$MODELVARIABLE->destroy($$MODELVARIABLE));
+    }
+}

@@ -1,0 +1,19 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+
+class $CLASSNAME extends Model
+{
+
+    /**
+     * The rules associated with the attributes for this model
+     *
+     * @var array
+     */
+    public function rules()
+    {
+        return [];
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "name": "flowflex/generators",
+    "description": "Generators to speed up workflows",
+    "type": "project",
+    "license": "Private",
+    "authors": [
+        {
+            "name": "Ed Stephenson",
+            "email": "edward.stephenson@me.com"
+        }
+    ],
+    "require": {}
+}
