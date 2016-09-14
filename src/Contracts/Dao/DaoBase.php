@@ -72,7 +72,7 @@ interface DaoBase
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function update($data, $id, $attribute = "id");
+    public function update(array $data, $id, $attribute = "id");
 
     /**
      * Remove an entry for the specified resource from the DB.
