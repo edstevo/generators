@@ -18,7 +18,6 @@ class DaoCreator
     protected $daoDirectory = '/Dao';
     protected $daoName = 'DaoBase.php';
     protected $exceptionDirectory = '/Dao/Exceptions';
-    protected $exceptionName = 'RepositoryException.php';
 
     public function __construct(Filesystem $files)
     {
@@ -51,17 +50,24 @@ class DaoCreator
 
     private function installFiles()
     {
-        $contract   = $this->files->get(__DIR__.'/../..' . $this->contractDirectory . '/' . $this->contractName);
-        $daoBase    = $this->files->get(__DIR__.'/../..' . $this->daoDirectory . '/' . $this->daoName);
-        $exception  = $this->files->get(__DIR__.'/../..' . $this->exceptionDirectory . '/' . $this->exceptionName);
+        $contract       = $this->files->get(__DIR__.'/../..' . $this->contractDirectory . '/' . $this->contractName);
+        $daoBase        = $this->files->get(__DIR__.'/../..' . $this->daoDirectory . '/' . $this->daoName);
+        $exceptionFiles = $this->files->allFiles(__DIR__.'/../..' . $this->exceptionDirectory . '/');
 
         $contract   = $this->renameNamespace($contract);
         $daoBase    = $this->renameNamespace($daoBase);
-        $exception  = $this->renameNamespace($exception);
 
         $this->files->put(app()->path() . $this->contractDirectory . '/' . $this->contractName, $contract);
         $this->files->put(app()->path() . $this->daoDirectory . '/' . $this->daoName, $daoBase);
-        $this->files->put(app()->path() . $this->exceptionDirectory . '/' . $this->exceptionName, $exception);
+
+        foreach($exceptionFiles as $exceptionFile)
+        {
+            $filename       = $exceptionFile->getFilename();
+            $file           = $this->files->get($exceptionFile);
+            $exceptionFile  = $this->renameNamespace($file);
+
+            $this->files->put(app()->path() . $this->exceptionDirectory . '/' . $filename, $exceptionFile);
+        }
     }
 
     private function renameNamespace($file)

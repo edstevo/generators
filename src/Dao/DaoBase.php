@@ -7,8 +7,8 @@
 
 namespace FlowflexComponents\Generators\Dao;
 
-
 use FlowflexComponents\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
+use FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException;
 use FlowflexComponents\Generators\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
 
@@ -152,6 +152,16 @@ abstract class DaoBase implements DaoBaseContract
     public function getRules()
     {
         return $this->model->rules();
+    }
+
+    /**
+     * Throw exception when model cannot be found
+     *
+     * @throws  ModelNotFoundException
+     */
+    public function notFound()
+    {
+        throw (new ModelNotFoundException)->setModel(get_class($this->model));
     }
 
 }
