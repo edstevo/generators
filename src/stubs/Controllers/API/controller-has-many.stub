@@ -59,7 +59,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 	public function show(Request $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
         $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
-        $$RELATIONVARIABLE      = $this->$MODELVARIABLE->getRelationWhere($$MODELVARIABLE, '$RELATIONVARIABLEs', ['id' => $$RELATIONVARIABLEId]);
+        $$RELATIONVARIABLE      = $this->$MODELVARIABLE->getRelationWhere($$MODELVARIABLE, '$RELATIONVARIABLEs', ['id' => $$RELATIONVARIABLEId])->first();
 
         return response()->make($$RELATIONVARIABLE);
 	}
