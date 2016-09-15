@@ -145,6 +145,18 @@ abstract class DaoBase implements DaoBaseContract
     }
 
     /**
+     * Retrieve all entries of a resource related to this model from the DB
+     *
+     * @param   \Illuminate\Database\Eloquent\Model  $model
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRelation($relationship)
+    {
+        return $model->$relationship;
+    }
+
+    /**
      * Get the validation rules associated with a model
      *
      * @return  array
