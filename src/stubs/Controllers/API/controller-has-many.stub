@@ -1,0 +1,84 @@
+<?php
+
+namespace $CONTROLLERNAMESPACE;
+
+//  Core
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+//  Dao Repositories
+use App\Dao\$MODELNAME\Eloquent\$MODELNAMEDao;
+use App\Dao\$RELATIONNAME\Eloquent\$RELATIONNAMEDao;
+
+//  Requests
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Update$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest;
+
+class $MODELNAME$RELATIONNAMEController extends Controller
+{
+	protected $$MODELVARIABLE;
+	protected $$RELATIONVARIABLE;
+
+
+	/**
+	 * $MODELNAME$RELATIONNAMEController Constructor
+	 *
+	 */
+	public function __construct($MODELNAMEDao $$MODELVARIABLE, $RELATIONNAMEDao $$RELATIONVARIABLE)
+	{
+        $this->$MODELVARIABLE           = $$MODELVARIABLE;
+		$this->$RELATIONVARIABLE        = $$RELATIONVARIABLE;
+	}
+
+    /**
+     * Display a listing of the $RELATIONVARIABLEs related to the $MODELVARIABLE.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  int                          $$MODELVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function all(Request $request, $$MODELVARIABLEId)
+    {
+        $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+        $$RELATIONVARIABLEs     = $this->$MODELVARIABLE->getRelation($$MODELVARIABLE, '$RELATIONVARIABLE');
+
+        return response()->make($$RELATIONVARIABLEs);
+    }
+
+    /**
+     * Display a $RELATIONVARIABLE related to the $MODELVARIABLE.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  int                          $$MODELVARIABLEId
+     * @param  int                          $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function show(Request $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+        $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+        $$RELATIONVARIABLE      = $this->$MODELVARIABLE->getRelationWhere($$MODELVARIABLE, '$RELATIONVARIABLE', ['id' => $$RELATIONVARIABLEId]);
+
+        return response()->make($$RELATIONVARIABLE);
+	}
+
+    /**
+     * Put a new $RELATIONVARIABLE in storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest     $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function store(Create$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId)
+	{
+		$$RELATIONVARIABLEData  = $this->getRequestData($request);
+
+		$$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+		$$RELATIONVARIABLE      = $this->$MODELVARIABLE->storeRelation($MODELVARIABLE, '$RELATIONVARIABLE', $$RELATIONVARIABLEData);
+
+		return response()->make($$RELATIONVARIABLE);
+	}
+}

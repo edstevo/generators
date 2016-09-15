@@ -86,11 +86,34 @@ interface DaoBase
     /**
      * Retrieve all entries of a resource related to this model from the DB
      *
-     * @param   \Illuminate\Database\Eloquent\Model  $model
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relationship
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelation($relationship);
+    public function getRelation($model, $relationship);
+
+    /**
+     * Retrieve all entries of a resource related to this model from the DB with constraints
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   array                               $constraints
+     *
+     * @return  \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRelationWhere($model, $relation, $constraints = []);
+
+    /**
+     * Put a new resource in storage that is related to another resource
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   array                               $data
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     */
+    public function storeRelation($model, $relation, $data);
 
     /**
      * Get the validation rules associated with a model

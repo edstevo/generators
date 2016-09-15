@@ -11,7 +11,7 @@ class GenerateRequest extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:request {type} {name}';
+    protected $signature = 'generate:request {type} {name} {--relation=}';
 
     /**
      * The console command description.
@@ -42,9 +42,19 @@ class GenerateRequest extends GeneratorCommand
         return $this->argument('type');
     }
 
+    protected function getRelationOption()
+    {
+        return $this->option('relation');
+    }
+
     protected function getFormattedTypeInput()
     {
         return ucwords($this->getTypeInput());
+    }
+
+    protected function getFormattedRelation()
+    {
+        return ucwords($this->getRelationOption());
     }
 
     protected function getFormattedNameInput()
@@ -63,6 +73,11 @@ class GenerateRequest extends GeneratorCommand
         $path  = config('generators.requests.path');
         $path  = str_replace("/", "\\", $path);
 
+        if ($this->getRelationOption())
+        {
+            return $rootNamespace.$path."\\".$this->getFormattedNameInput()."\\".$this->getFormattedRelation();
+        }
+
         return $rootNamespace.$path."\\".$this->getFormattedNameInput()."\\".$this->getFormattedNameInput();
     }
 
@@ -79,6 +94,13 @@ class GenerateRequest extends GeneratorCommand
         $path               = $this->laravel['path'].'/'.str_replace('\\', '/', $name).'Request.php';
         $pathComponents     = collect(explode("/", $path))->reverse()->values();
         $pathComponents[0]  = $this->getFormattedTypeInput() . $pathComponents[0];
+
+        if ($this->getRelationOption())
+        {
+            $pathComponents[0]  = str_replace("Request", $this->getFormattedRelation() . "Request", $pathComponents[0]);
+            $pathComponents[1]  = $this->getFormattedRelation();
+        }
+
         $path               = $pathComponents->reverse()->values()->implode('/');
 
         return $path;
@@ -93,12 +115,23 @@ class GenerateRequest extends GeneratorCommand
      */
     protected function replaceClass($stub, $name)
     {
-        $class  = str_replace($this->getNamespace($name).'\\', '', $name);
+        $class          = str_replace($this->getNamespace($name).'\\', '', $name);
 
-        $stub   = str_replace('$REQUESTTYPE', $this->getFormattedTypeInput(), $stub);
+        $requestName    = $this->getFormattedTypeInput().$this->getFormattedNameInput();
+        $modelName      = $this->getFormattedNameInput();
+        $modelVariable  = camel_case($this->getFormattedNameInput());
 
-        $stub   = str_replace('$MODELNAME', $this->getFormattedNameInput(), $stub);
-        $stub   = str_replace('$MODELVARIABLE', strtolower($this->getFormattedNameInput()), $stub);
+        if ($this->getRelationOption())
+        {
+            $requestName    = $this->getFormattedTypeInput().$this->getFormattedNameInput().$this->getFormattedRelation();
+            $modelName      = $this->getFormattedRelation();
+            $modelVariable  = camel_case($this->getFormattedRelation());
+        }
+
+        $stub   = str_replace('$REQUESTNAME', $requestName, $stub);
+
+        $stub   = str_replace('$MODELNAME', $modelName, $stub);
+        $stub   = str_replace('$MODELVARIABLE', $modelVariable, $stub);
 
         return $stub;
     }
