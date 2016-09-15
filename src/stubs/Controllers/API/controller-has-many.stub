@@ -39,7 +39,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function all(Request $request, $$MODELVARIABLEId)
+    public function index(Request $request, $$MODELVARIABLEId)
     {
         $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
         $$RELATIONVARIABLEs     = $this->$MODELVARIABLE->getRelation($$MODELVARIABLE, '$RELATIONVARIABLE');
