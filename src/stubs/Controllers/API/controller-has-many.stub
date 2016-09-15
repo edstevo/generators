@@ -77,7 +77,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 		$$RELATIONVARIABLEData  = $this->getRequestData($request);
 
 		$$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
-		$$RELATIONVARIABLE      = $this->$MODELVARIABLE->storeRelation($MODELVARIABLE, '$RELATIONVARIABLE', $$RELATIONVARIABLEData);
+		$$RELATIONVARIABLE      = $this->$MODELVARIABLE->storeRelation($$MODELVARIABLE, '$RELATIONVARIABLE', $$RELATIONVARIABLEData);
 
 		return response()->make($$RELATIONVARIABLE);
 	}
