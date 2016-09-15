@@ -152,9 +152,17 @@ class GenerateController extends GeneratorCommand
         if ($relationship)
         {
             $this->info('Relationship Controller Being Generated');
-            $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Create']);
-            $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Update']);
-            $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Destroy']);
+
+            if ($relationship['type'] == $this->hasManyRelationship)
+            {
+                $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Create']);
+            }
+
+            if ($relationship['type'] == $this->manyToManyRelationship)
+            {
+                $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Attach']);
+                $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Detach']);
+            }
         }
 
         if (!$relationship)
