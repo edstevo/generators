@@ -13,6 +13,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 		'FlowflexComponents\Generators\Commands\GenerateController',
 		'FlowflexComponents\Generators\Commands\GenerateDaoEvent',
 		'FlowflexComponents\Generators\Commands\GenerateDaoRepository',
+		'FlowflexComponents\Generators\Commands\GenerateMigration',
 		'FlowflexComponents\Generators\Commands\GenerateModel',
 		'FlowflexComponents\Generators\Commands\GenerateRequest',
 		'FlowflexComponents\Generators\Commands\InstallDaoSystem'
