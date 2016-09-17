@@ -116,26 +116,31 @@ class GenerateModel extends GeneratorCommand
             $fieldName      = $components[0];
             unset($components[0]);
 
+            if ($fieldName == 'timestamps')
+                continue;
+
             array_values($components);
 
-            $rules  .= "\t\t\t";
-            $rules  .= "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
+            $ruleString  .= "\t\t\t";
+            $ruleString  .= "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
 
             if (in_array('nullable', $components))
             {
-                $rules = str_replace("required|", "", $rules);
-                $rules = str_replace("|nullable", "", $rules);
+                $ruleString = str_replace("required|", "", $ruleString);
+                $ruleString = str_replace("|nullable", "", $ruleString);
             }
 
             if (in_array('unique', $components))
             {
-                $rules = str_replace("unique", "unique:" . $this->getModelTableName(), $rules);
+                $ruleString = str_replace("unique", "unique:" . $this->getModelTableName(), $ruleString);
             }
 
             if ($key != $fieldComponents->count() - 1)
             {
-                $rules .= "," . PHP_EOL;
+                $ruleString .= "," . PHP_EOL;
             }
+
+            $rules  .= $ruleString;
         }
 
         return $rules;
