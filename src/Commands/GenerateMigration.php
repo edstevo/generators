@@ -129,7 +129,10 @@ class GenerateMigration extends Command
 
         $fields         = $this->buildFields($this->getFields());
 
-        $stub           = str_replace("// FIELDS", $fields, $stub);
+        if ($fields)
+        {
+            $stub           = str_replace("// FIELDS", $fields, $stub);
+        }
 
         return $stub;
     }
@@ -175,6 +178,9 @@ class GenerateMigration extends Command
 
     private function buildFields($encodedFields)
     {
+        if (!$encodedFields)
+            return;
+
         $fieldString    = "";
         $fields         = explode(",", $encodedFields);
 

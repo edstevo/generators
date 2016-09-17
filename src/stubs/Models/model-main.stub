@@ -8,6 +8,13 @@ class $CLASSNAME extends Model
 {
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['*'];
+
+    /**
      * The rules associated with the attributes for this model
      *
      * @var array

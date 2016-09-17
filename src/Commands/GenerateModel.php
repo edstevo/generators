@@ -11,7 +11,7 @@ class GenerateModel extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:model {name}';
+    protected $signature = 'generate:model {name} {--fields=}';
 
     /**
      * The console command description.
@@ -60,8 +60,39 @@ class GenerateModel extends GeneratorCommand
      */
     protected function replaceClass($stub, $name)
     {
-        $class = str_replace($this->getNamespace($name).'\\', '', $name);
+        $this->call("generate:migration", ['table' => $this->getNameInput(), '--fields' => $this->option('fields')]);
 
-        return str_replace('$CLASSNAME', $class, $stub);
+        $class  = str_replace($this->getNamespace($name).'\\', '', $name);
+
+        $stub  = str_replace('$CLASSNAME', $class, $stub);
+
+        $fields = collect($this->getFields());
+
+        if ($fields)
+        {
+            $fieldString    = "'".$fields->implode("', '")."'";
+
+            $stub  = str_replace('protected $fillable = [\'*\'];', 'protected $fillable = [' . $fieldString . '];', $stub);
+        }
+
+        return $stub;
     }
+
+    private function getFields()
+    {
+        if (!$this->option('fields'))
+            return;
+
+        $fieldComponents        = explode(",", $this->option('fields'));
+        $fields                 = [];
+
+        foreach($fieldComponents as $key => $field)
+        {
+            $components     = explode(":", $field);
+            array_push($fields, $components[0]);
+        }
+
+        return $fields;
+    }
+
 }
