@@ -121,7 +121,7 @@ class GenerateModel extends GeneratorCommand
 
             array_values($components);
 
-            $ruleString  .= "\t\t\t";
+            $ruleString  = "\t\t\t";
             $ruleString  .= "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
 
             if (in_array('nullable', $components))
