@@ -135,6 +135,9 @@ class GenerateModel extends GeneratorCommand
                 $ruleString = str_replace("unique", "unique:" . $this->getModelTableName(), $ruleString);
             }
 
+            //  Rules that won't work
+            $ruleString = str_replace("|text", "", $ruleString);
+
             if ($key != $fieldComponents->count() - 1)
             {
                 $ruleString .= "," . PHP_EOL;
