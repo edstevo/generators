@@ -75,6 +75,10 @@ class GenerateModel extends GeneratorCommand
             $stub  = str_replace('protected $fillable = [\'*\'];', 'protected $fillable = [' . $fieldString . '];', $stub);
         }
 
+        $rules  = $this->buildRules();
+
+        dd($rules);
+
         return $stub;
     }
 
@@ -95,4 +99,43 @@ class GenerateModel extends GeneratorCommand
         return $fields;
     }
 
+    private function buildRules()
+    {
+        if (!$this->option('fields'))
+            return;
+
+        $fieldComponents        = explode(",", $this->option('fields'));
+        $rules                  = [];
+
+        foreach($fieldComponents as $key => $field)
+        {
+            $components     = explode(":", $field);
+            $fieldName      = $components[0];
+            unset($components[0]);
+
+            array_values($components);
+
+            $ruleString     = "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
+
+            if (in_array('nullable', $components))
+            {
+                $ruleString = str_replace("required|", "", $ruleString);
+                $ruleString = str_replace("|nullable", "", $ruleString);
+            }
+
+            if (in_array('unique', $components))
+            {
+                $ruleString = str_replace("unique", "unique:" . $this->getModelTableName(), $ruleString);
+            }
+
+            dd($ruleString);
+        }
+
+        return $fields;
+    }
+
+    private function getModelTableName()
+    {
+        return str_plural(snake_case(ucwords($this->getNameInput())));
+    }
 }
