@@ -77,7 +77,10 @@ class GenerateModel extends GeneratorCommand
 
         $rules  = $this->buildRules();
 
-        dd($rules);
+        if ($fields)
+        {
+            $stub = str_replace('return [];', 'return [' . PHP_EOL . $rules . PHP_EOL . "\t\t];", $stub);
+        }
 
         return $stub;
     }
@@ -104,8 +107,8 @@ class GenerateModel extends GeneratorCommand
         if (!$this->option('fields'))
             return;
 
-        $fieldComponents        = explode(",", $this->option('fields'));
-        $rules                  = [];
+        $fieldComponents        = collect(explode(",", $this->option('fields')));
+        $rules                  = "";
 
         foreach($fieldComponents as $key => $field)
         {
@@ -115,23 +118,27 @@ class GenerateModel extends GeneratorCommand
 
             array_values($components);
 
-            $ruleString     = "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
+            $rules  .= "\t\t\t";
+            $rules  .= "'" . $fieldName . "' => 'required|" . implode($components, "|") . "'";
 
             if (in_array('nullable', $components))
             {
-                $ruleString = str_replace("required|", "", $ruleString);
-                $ruleString = str_replace("|nullable", "", $ruleString);
+                $rules = str_replace("required|", "", $rules);
+                $rules = str_replace("|nullable", "", $rules);
             }
 
             if (in_array('unique', $components))
             {
-                $ruleString = str_replace("unique", "unique:" . $this->getModelTableName(), $ruleString);
+                $rules = str_replace("unique", "unique:" . $this->getModelTableName(), $rules);
             }
 
-            dd($ruleString);
+            if ($key != $fieldComponents->count() - 1)
+            {
+                $rules .= "," . PHP_EOL;
+            }
         }
 
-        return $fields;
+        return $rules;
     }
 
     private function getModelTableName()
