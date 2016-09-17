@@ -125,7 +125,7 @@ class GenerateMigration extends Command
         $migrationName  = $this->getFormattedTableType() . $this->getFormattedTableName() . "Table";
 
         $stub           = str_replace("DummyClass", $migrationName, $stub);
-        $stub           = str_replace("DummyTable", $tableName, $stub);
+        $stub           = str_replace("DummyTable", $this->getVariableTableName(), $stub);
 
         $fields         = $this->buildFields($this->getFields());
 
@@ -146,7 +146,7 @@ class GenerateMigration extends Command
     {
         $migrationPath  = database_path() . '/migrations';
 
-        $tableName  = date('Y_m_d_His') . '_create_' . strtolower(camel_case($this->getFormattedTableName())) . "_table.php";
+        $tableName  = date('Y_m_d_His') . '_create_' . $this->getVariableTableName() . "_table.php";
 
         if ($this->getTableType() == 'update')
         {
@@ -167,6 +167,16 @@ class GenerateMigration extends Command
     }
 
     /**
+     * Return a formatted version of the table name defined by the user
+     *
+     * @return string
+     */
+    private function getVariableTableName()
+    {
+        return str_plural(snake_case(ucwords($this->getTableName())));
+    }
+
+    /**
      * Return the fields specified by the user
      *
      * @return array|string
@@ -182,37 +192,48 @@ class GenerateMigration extends Command
             return;
 
         $fieldString    = "";
-        $fields         = explode(",", $encodedFields);
+        $fields         = collect(explode(",", $encodedFields));
 
         foreach($fields as $key => $field)
         {
+            $components     = explode(":", $field);
+            $fieldName      = $components[0];
+
             if ($key != 0)
             {
                 $fieldString .= "\t\t\t";
             }
 
-            $components     = explode(":", $field);
-            $fieldName      = $components[0];
-            $fieldType      = $components[1];
-
-            unset($components[0]);
-            unset($components[1]);
-
-            array_values($components);
-
-            $fieldString    .= '$table->' . $fieldType . '("' . $fieldName . '")';
-
-            foreach($components as $function)
+            if ($fieldName == 'timestamps')
             {
-                $fieldString .= '->' . $function . "()";
+
+                $fieldString    .= '$table->timestamps()';
+
+            } else {
+
+                $fieldType      = $components[1];
+
+                unset($components[0]);
+                unset($components[1]);
+
+                array_values($components);
+
+                $fieldString    .= '$table->' . $fieldType . '("' . $fieldName . '")';
+
+                foreach($components as $function)
+                {
+                    $fieldString .= '->' . $function . "()";
+                }
+
             }
 
             $fieldString    .= ";";
 
-            if ($key != count($fieldString))
+            if ($key != $fields->count() - 1)
             {
                 $fieldString .= PHP_EOL;
             }
+
         }
 
         return $fieldString;
