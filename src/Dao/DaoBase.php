@@ -66,6 +66,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function all()
     {
+        $this->applyCriteria();
         return $this->model->all();
     }
 
@@ -90,6 +91,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function find($id)
     {
+        $this->applyCriteria();
         return $this->model->find($id);
     }
 
@@ -105,6 +107,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function findOrFail($id)
     {
+        $this->applyCriteria();
         return $this->model->findOrFail($id);
     }
 
@@ -117,6 +120,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function findWhere($data)
     {
+        $this->applyCriteria();
         return $this->model->where($data)->first();
     }
 
@@ -129,6 +133,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function where($data)
     {
+        $this->applyCriteria();
         return $this->model->where($data)->get();
     }
 
