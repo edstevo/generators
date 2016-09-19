@@ -22,7 +22,7 @@ class $MODELNAME$EVENTTYPE implements ShouldBroadcastNow
      */
     public function __construct($$MODELVARIABLE)
     {
-        $this->product	= $$MODELVARIABLE;
+        $this->$MODELVARIABLE	= $$MODELVARIABLE;
     }
 
     /**
