@@ -1,0 +1,17 @@
+<?php namespace App\Dao\Criteria\$MODELNAME;
+
+use App\Dao\CriteriaBase;
+use App\Contracts\Dao\DaoBase;
+
+class $CRITERIANAME extends CriteriaBase {
+
+    /**
+     * @param   $model
+     * @param   DaoBase $repository
+     * @return  mixed
+     */
+    public function apply($model, DaoBase $repository)
+    {
+        //  Query
+    }
+}

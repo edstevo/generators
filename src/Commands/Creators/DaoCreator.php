@@ -14,9 +14,7 @@ class DaoCreator
 {
 
     protected $contractDirectory = '/Contracts/Dao';
-    protected $contractName = 'DaoBase.php';
     protected $daoDirectory = '/Dao';
-    protected $daoName = 'DaoBase.php';
     protected $exceptionDirectory = '/Dao/Exceptions';
 
     public function __construct(Filesystem $files)
@@ -50,19 +48,31 @@ class DaoCreator
 
     private function installFiles()
     {
-        $contract       = $this->files->get(__DIR__.'/../..' . $this->contractDirectory . '/' . $this->contractName);
-        $daoBase        = $this->files->get(__DIR__.'/../..' . $this->daoDirectory . '/' . $this->daoName);
-        $exceptionFiles = $this->files->allFiles(__DIR__.'/../..' . $this->exceptionDirectory . '/');
+        $contractFiles      = $this->files->files(__DIR__.'/../..' . $this->contractDirectory);
+        $daoFiles           = $this->files->files(__DIR__.'/../..' . $this->daoDirectory);
+        $exceptionFiles     = $this->files->files(__DIR__.'/../..' . $this->exceptionDirectory);
 
-        $contract   = $this->renameNamespace($contract);
-        $daoBase    = $this->renameNamespace($daoBase);
+        foreach($contractFiles as $contractFile)
+        {
+            $filename       = collect(explode("/", $contractFile))->last();
+            $file           = $this->files->get($contractFile);
+            $contractFile   = $this->renameNamespace($file);
 
-        $this->files->put(app()->path() . $this->contractDirectory . '/' . $this->contractName, $contract);
-        $this->files->put(app()->path() . $this->daoDirectory . '/' . $this->daoName, $daoBase);
+            $this->files->put(app()->path() . $this->contractDirectory . '/' . $filename, $contractFile);
+        }
+
+        foreach($daoFiles as $daoFile)
+        {
+            $filename       = collect(explode("/", $daoFile))->last();
+            $file           = $this->files->get($daoFile);
+            $daoFile   = $this->renameNamespace($file);
+
+            $this->files->put(app()->path() . $this->daoDirectory . '/' . $filename, $daoFile);
+        }
 
         foreach($exceptionFiles as $exceptionFile)
         {
-            $filename       = $exceptionFile->getFilename();
+            $filename       = collect(explode("/", $exceptionFile))->last();
             $file           = $this->files->get($exceptionFile);
             $exceptionFile  = $this->renameNamespace($file);
 
@@ -72,8 +82,9 @@ class DaoCreator
 
     private function renameNamespace($file)
     {
-        return str_replace("FlowflexComponents\Generators\\", app()->getNamespace(), $file);
+        return str_replace("FlowflexComponents\\Generators\\", app()->getNamespace(), $file);
     }
+
 
     public function install()
     {

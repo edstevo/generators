@@ -6,6 +6,7 @@ use RuntimeException;
 
 class ModelNotFoundException extends RuntimeException
 {
+
     /**
      * Name of the affected Eloquent model.
      *
@@ -37,4 +38,5 @@ class ModelNotFoundException extends RuntimeException
     {
         return $this->model;
     }
+
 }

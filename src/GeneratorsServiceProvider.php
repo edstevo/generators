@@ -11,6 +11,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 
 	protected $commandArray	= [
 		'FlowflexComponents\Generators\Commands\GenerateController',
+		'FlowflexComponents\Generators\Commands\GenerateDaoCriteria',
 		'FlowflexComponents\Generators\Commands\GenerateDaoEvent',
 		'FlowflexComponents\Generators\Commands\GenerateDaoRepository',
 		'FlowflexComponents\Generators\Commands\GenerateMigration',

@@ -7,12 +7,14 @@
 
 namespace FlowflexComponents\Generators\Dao;
 
+use FlowflexComponents\Generators\Contracts\Dao\CriteriaContract;
 use FlowflexComponents\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
 use FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException;
 use FlowflexComponents\Generators\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
-abstract class DaoBase implements DaoBaseContract
+abstract class DaoBase implements DaoBaseContract, CriteriaContract
 {
 
     /**
@@ -20,8 +22,20 @@ abstract class DaoBase implements DaoBaseContract
      */
     protected $model;
 
-    public function __construct()
+    /**
+     * @var Collection
+     */
+    protected $criteria;
+
+    /**
+     * @var bool
+     */
+    protected $skipCriteria = false;
+
+    public function __construct(Collection $collection)
     {
+        $this->criteria         = $collection;
+        $this->resetScope();
         $this->makeModel();
     }
 
@@ -203,6 +217,63 @@ abstract class DaoBase implements DaoBaseContract
     public function notFound()
     {
         throw (new ModelNotFoundException)->setModel(get_class($this->model));
+    }
+
+    /**
+     * @return $this
+     */
+    public function resetScope() {
+        $this->skipCriteria(false);
+        return $this;
+    }
+
+    /**
+     * @param bool $status
+     * @return $this
+     */
+    public function skipCriteria($status = true){
+        $this->skipCriteria = $status;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCriteria() {
+        return $this->criteria;
+    }
+
+    /**
+     * @param CriteriaBase $criteria
+     * @return $this
+     */
+    public function getByCriteria(CriteriaBase $criteria) {
+        $this->model = $criteria->apply($this->model, $this);
+        return $this;
+    }
+
+    /**
+     * @param CriteriaBase $criteria
+     * @return $this
+     */
+    public function pushCriteria(CriteriaBase $criteria) {
+        $this->criteria->push($criteria);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function  applyCriteria() {
+        if($this->skipCriteria === true)
+            return $this;
+
+        foreach($this->getCriteria() as $criteria) {
+            if($criteria instanceof CriteriaBase)
+                $this->model = $criteria->apply($this->model, $this);
+        }
+
+        return $this;
     }
 
 }

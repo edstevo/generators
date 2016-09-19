@@ -8,6 +8,7 @@ namespace FlowflexComponents\Generators\Contracts\Dao;
 
 interface DaoBase
 {
+
     /**
      * Retrieve all entries of the resource from the DB
      *
@@ -128,4 +129,5 @@ interface DaoBase
      * @throws  \FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException
      */
     public function notFound();
+
 }
