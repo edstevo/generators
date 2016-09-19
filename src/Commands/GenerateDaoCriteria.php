@@ -11,7 +11,7 @@ class GenerateDaoCriteria extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:dao-criteria {name} {criteria}';
+    protected $signature = 'generate:criteria {name} {criteria}';
 
     /**
      * The console command description.
