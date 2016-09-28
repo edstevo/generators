@@ -67,7 +67,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     public function all()
     {
         $this->applyCriteria();
-        return $this->model->all();
+        return $this->model->get();
     }
 
     /**
