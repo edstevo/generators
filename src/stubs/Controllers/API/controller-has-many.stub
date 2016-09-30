@@ -81,4 +81,35 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 
 		return response()->make($$RELATIONVARIABLE);
 	}
+
+    /**
+     * Update a $RELATIONVARIABLE in storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Update$MODELNAME$RELATIONNAMERequest     $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     * @param  int                                                                                  $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function destroy(Update$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+        $$RELATIONVARIABLEData  = $this->getRequestData($request);
+
+        return response()->make($this->$RELATIONVARIABLE->update($$RELATIONVARIABLEData, $$RELATIONVARIABLEId));
+	}
+
+    /**
+     * Remove a $RELATIONVARIABLE from storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest    $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     * @param  int                                                                                  $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function destroy(Destroy$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+		$$MODELVARIABLE         = $this->$RELATIONVARIABLE->findOrFail($$RELATIONVARIABLEId);
+		return response()->make($this->$RELATIONVARIABLE->destroy($$MODELVARIABLE));
+	}
 }

@@ -66,10 +66,9 @@ class $MODELNAMEController extends Controller
      */
     public function update(Update$MODELNAMERequest $request, $id)
     {
-        $$MODELVARIABLE        = $this->$MODELVARIABLE->find($id);
-        $$MODELVARIABLEData    = $this->getRequestData($request);
+        $$MODELVARIABLEData  = $this->getRequestData($request);
 
-        return response()->make($this->$MODELVARIABLE->update($$MODELVARIABLE, $$MODELVARIABLEData));
+        return response()->make($this->$MODELVARIABLE->update($$MODELVARIABLEData, $id));
     }
 
     /**
