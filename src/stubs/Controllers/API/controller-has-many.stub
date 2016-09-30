@@ -91,7 +91,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	public function destroy(Update$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	public function update(Update$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
         $$RELATIONVARIABLEData  = $this->getRequestData($request);
 
