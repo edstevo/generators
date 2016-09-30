@@ -156,6 +156,8 @@ class GenerateController extends GeneratorCommand
             if ($relationship['type'] == $this->hasManyRelationship)
             {
                 $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Create']);
+                $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Update']);
+                $this->call('generate:request', ['name' => $this->getNameInput(), '--relation' => $this->getRelationOption()['relation'], 'type' => 'Destroy']);
             }
 
             if ($relationship['type'] == $this->manyToManyRelationship)
