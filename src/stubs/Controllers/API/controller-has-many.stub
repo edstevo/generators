@@ -110,6 +110,8 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 	public function destroy(Destroy$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
 		$$MODELVARIABLE         = $this->$RELATIONVARIABLE->findOrFail($$RELATIONVARIABLEId);
-		return response()->make($this->$RELATIONVARIABLE->destroy($$MODELVARIABLE));
+		$result                 = $this->$RELATIONVARIABLE->destroy($$MODELVARIABLE);
+
+		return response()->make(['result' => $result]);
 	}
 }
