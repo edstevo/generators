@@ -63,7 +63,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
     /**
      * Associate a $$MODELVARIABLE with a $RELATIONVARIABLE in storage.
      *
-     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest     $request
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Attach$MODELNAME$RELATIONNAMERequest     $request
      * @param  int                                                                                  $$MODELVARIABLEId
      * @param  int                                                                                  $$RELATIONVARIABLEId
      *
@@ -100,7 +100,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
     /**
      * Disassociate a $$MODELVARIABLE with a $RELATIONVARIABLE in storage.
      *
-     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest    $request
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Detach$MODELNAME$RELATIONNAMERequest    $request
      * @param  int                                                                                  $$MODELVARIABLEId
      * @param  int                                                                                  $$RELATIONVARIABLEId
      *
