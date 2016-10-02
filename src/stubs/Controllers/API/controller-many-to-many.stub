@@ -1,0 +1,124 @@
+<?php
+
+namespace $CONTROLLERNAMESPACE;
+
+//  Core
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+//  Dao Repositories
+use App\Dao\$MODELNAME\Eloquent\$MODELNAMEDao;
+use App\Dao\$RELATIONNAME\Eloquent\$RELATIONNAMEDao;
+
+//  Requests
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Update$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest;
+
+class $MODELNAME$RELATIONNAMEController extends Controller
+{
+	protected $$MODELVARIABLE;
+	protected $$RELATIONVARIABLE;
+
+
+	/**
+	 * $MODELNAME$RELATIONNAMEController Constructor
+	 *
+	 */
+	public function __construct($MODELNAMEDao $$MODELVARIABLE, $RELATIONNAMEDao $$RELATIONVARIABLE)
+	{
+        $this->$MODELVARIABLE           = $$MODELVARIABLE;
+		$this->$RELATIONVARIABLE        = $$RELATIONVARIABLE;
+	}
+
+    /**
+     * Display a listing of the $RELATIONVARIABLEs related to the $MODELVARIABLE.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  int                          $$MODELVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request, $$MODELVARIABLEId)
+    {
+        $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+        $$RELATIONVARIABLEs     = $this->$MODELVARIABLE->getRelation($$MODELVARIABLE, '$RELATIONVARIABLEs');
+
+        return response()->make($$RELATIONVARIABLEs);
+    }
+
+    /**
+     * Display the relationship between a $$MODELVARIABLE and a $RELATIONVARIABLE.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  int                          $$MODELVARIABLEId
+     * @param  int                          $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function show(Request $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+        $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+        $$RELATIONVARIABLE      = $this->$MODELVARIABLE->getRelationWhere($$MODELVARIABLE, '$RELATIONVARIABLEs', ['id' => $$RELATIONVARIABLEId])->first();
+
+        return response()->make($$RELATIONVARIABLE);
+	}
+
+    /**
+     * Associate a $$MODELVARIABLE with a $RELATIONVARIABLE in storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest     $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     * @param  int                                                                                  $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function store(Attach$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId)
+	{
+		$$RELATIONVARIABLEData  = $this->getRequestData($request);
+
+		$$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+		$$RELATIONVARIABLE      = $this->$RELATIONVARIABLE->find($$RELATIONVARIABLEId);
+
+		return response()->make($$RELATIONVARIABLE);
+	}
+
+    /**
+     * Update the pivot between a $$MODELVARIABLE and a $RELATIONVARIABLE in storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Update$MODELNAME$RELATIONNAMERequest     $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     * @param  int                                                                                  $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function update(Update$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+        $$RELATIONVARIABLEData  = $this->getRequestData($request);
+
+		foreach($$RELATIONVARIABLEData as $$RELATIONVARIABLE)
+		{
+			$$RELATIONVARIABLEData[$$RELATIONVARIABLE['id']]	= $$RELATIONVARIABLE;
+			unset($$RELATIONVARIABLEData[$$RELATIONVARIABLE['id']]['id']);
+		}
+
+		return response()->make($this->$MODELVARIABLE->updateRelation($$RELATIONVARIABLE, '$RELATIONVARIABLEs', $$RELATIONVARIABLEData));
+	}
+
+    /**
+     * Disassociate a $$MODELVARIABLE with a $RELATIONVARIABLE in storage.
+     *
+     * @param  \App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest    $request
+     * @param  int                                                                                  $$MODELVARIABLEId
+     * @param  int                                                                                  $$RELATIONVARIABLEId
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function destroy(Detach$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
+	{
+		$$MODELVARIABLE         = $this->$RELATIONVARIABLE->findOrFail($$RELATIONVARIABLEId);
+		$result                 = $this->$RELATIONVARIABLE->destroy($$MODELVARIABLE);
+
+		return response()->make(['result' => $result]);
+	}
+}
