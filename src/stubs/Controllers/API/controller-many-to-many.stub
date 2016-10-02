@@ -8,27 +8,23 @@ use App\Http\Controllers\Controller;
 
 //  Dao Repositories
 use App\Dao\$MODELNAME\Eloquent\$MODELNAMEDao;
-use App\Dao\$RELATIONNAME\Eloquent\$RELATIONNAMEDao;
 
 //  Requests
-use App\Http\Requests\$MODELNAME\$RELATIONNAME\Create$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Attach$MODELNAME$RELATIONNAMERequest;
 use App\Http\Requests\$MODELNAME\$RELATIONNAME\Update$MODELNAME$RELATIONNAMERequest;
-use App\Http\Requests\$MODELNAME\$RELATIONNAME\Destroy$MODELNAME$RELATIONNAMERequest;
+use App\Http\Requests\$MODELNAME\$RELATIONNAME\Detach$MODELNAME$RELATIONNAMERequest;
 
 class $MODELNAME$RELATIONNAMEController extends Controller
 {
 	protected $$MODELVARIABLE;
-	protected $$RELATIONVARIABLE;
-
 
 	/**
 	 * $MODELNAME$RELATIONNAMEController Constructor
 	 *
 	 */
-	public function __construct($MODELNAMEDao $$MODELVARIABLE, $RELATIONNAMEDao $$RELATIONVARIABLE)
+	public function __construct($MODELNAMEDao $$MODELVARIABLE)
 	{
         $this->$MODELVARIABLE           = $$MODELVARIABLE;
-		$this->$RELATIONVARIABLE        = $$RELATIONVARIABLE;
 	}
 
     /**
@@ -73,14 +69,10 @@ class $MODELNAME$RELATIONNAMEController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	public function store(Attach$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId)
+	public function store(Attach$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
-		$$RELATIONVARIABLEData  = $this->getRequestData($request);
-
 		$$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
-		$$RELATIONVARIABLE      = $this->$RELATIONVARIABLE->find($$RELATIONVARIABLEId);
-
-		return response()->make($$RELATIONVARIABLE);
+		return response()->make($this->$MODELVARIABLE->attach($$MODELVARIABLE, '$RELATIONVARIABLEs', $$RELATIONVARIABLEId));
 	}
 
     /**
@@ -116,9 +108,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
      */
 	public function destroy(Detach$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
-		$$MODELVARIABLE         = $this->$RELATIONVARIABLE->findOrFail($$RELATIONVARIABLEId);
-		$result                 = $this->$RELATIONVARIABLE->destroy($$MODELVARIABLE);
-
-		return response()->make(['result' => $result]);
+		$$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
+		return response()->make($this->$MODELVARIABLE->detach($$MODELVARIABLE, '$RELATIONVARIABLEs', $$RELATIONVARIABLEId));
 	}
 }
