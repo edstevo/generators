@@ -5,12 +5,12 @@
  *  You must get permission to use this work.
  */
 
-namespace FlowflexComponents\Generators\Dao;
+namespace App\Dao;
 
-use FlowflexComponents\Generators\Contracts\Dao\CriteriaContract;
-use FlowflexComponents\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
-use FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException;
-use FlowflexComponents\Generators\Dao\Exceptions\RepositoryException;
+use App\Contracts\Dao\CriteriaContract;
+use App\Contracts\Dao\DaoBase as DaoBaseContract;
+use App\Dao\Exceptions\ModelNotFoundException;
+use App\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -67,7 +67,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     public function all()
     {
         $this->applyCriteria();
-        return $this->model->get();
+        return $this->model->all();
     }
 
     /**
@@ -120,7 +120,6 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function findWhere($data)
     {
-        $this->applyCriteria();
         return $this->model->where($data)->first();
     }
 
@@ -202,6 +201,102 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     public function storeRelation($model, $relation, $data)
     {
         return $model->$relation()->create($data);
+    }
+
+    /**
+     * Update a relation of the model
+     *
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param string                                $relation
+     * @param array                                 $data
+     * @param null                                  $id
+     * @param string                                $attribute
+     *
+     * @return mixed|void
+     */
+    public function updateRelation($model, $relation, array $data, $id = null, $attribute = "id")
+    {
+        if ($model->$relation() instanceof HasMany)
+        {
+            return $this->updateRelationHasMany($model, $relation, $data, $id);
+        }
+
+        if ($model->$relation() instanceof BelongsToMany)
+        {
+            return $this->updateRelationBelongsToMany($model, $relation, $data, $id);
+        }
+
+        if ($model->$relation() instanceof MorphTo)
+        {
+            return $this->updateRelationMorphTo($model, $relation, $data, $id);
+        }
+    }
+
+    private function updateRelationHasMany($model, $relation, array $data, $id)
+    {
+//        TODO: Finish
+    }
+
+    /**
+     * Update the pivot table on a many to many relationship
+     *
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param string                                $relation
+     * @param array                                 $data
+     * @param int                                   $id
+     *
+     * @return mixed
+     */
+    private function updateRelationBelongsToMany($model, $relation, array $data, $id)
+    {
+        return $model->$relation()->sync($data, false);
+    }
+
+    private function updateRelationMorphTo($model, $relation, array $data, $id)
+    {
+//        TODO: Finish
+    }
+
+    /**
+     * Associate a model with a relation via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int                                 $relation_id
+     *
+     * @param   array
+     */
+    public function attach($model, $relationship, $relation_id)
+    {
+        return $model->$relationship()->attach($relation_id);
+    }
+
+    /**
+     * Sync a model and its relations via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int                                 $relation_id
+     *
+     * @param   array
+     */
+    public function sync($model, $relationship, $relation_id, $detaching = true)
+    {
+        return $model->$relationship()->sync($relation_id, $detaching);
+    }
+
+    /**
+     * Dissociate a model with a relation via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int                                 $relation_id
+     *
+     * @param   array
+     */
+    public function detach($model, $relationship, $relation_id)
+    {
+        return $model->$relationship()->detach($relation_id);
     }
 
     /**
