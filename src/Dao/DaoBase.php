@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace App\Dao;
+namespace App\Dao\Eloquent;
 
 use App\Contracts\Dao\CriteriaContract;
 use App\Contracts\Dao\DaoBase as DaoBaseContract;

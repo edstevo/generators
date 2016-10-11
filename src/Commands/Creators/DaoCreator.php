@@ -65,9 +65,9 @@ class DaoCreator
         {
             $filename       = collect(explode("/", $daoFile))->last();
             $file           = $this->files->get($daoFile);
-            $daoFile   = $this->renameNamespace($file);
+            $daoFile        = $this->renameNamespace($file);
 
-            $this->files->put(app()->path() . $this->daoDirectory . '/' . $filename, $daoFile);
+            $this->files->put(app()->path() . $this->daoDirectory . '/Eloquent/' . $filename, $daoFile);
         }
 
         foreach($exceptionFiles as $exceptionFile)

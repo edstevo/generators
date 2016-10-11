@@ -53,7 +53,7 @@ class GenerateDaoRepository extends GeneratorCommand
         $path  = config('generators.dao.path');
         $path  = str_replace("/", "\\", $path);
 
-        return $rootNamespace.$path."\\".$this->getFormattedNameInput()."\\Eloquent";
+        return $rootNamespace.$path."\\".$this->getFormattedNameInput();
     }
 
     /**

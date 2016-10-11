@@ -2,7 +2,7 @@
 
 namespace DummyNamespace;
 
-use App\Dao\DaoBase;
+use App\Dao\Eloquent\DaoBase;
 use App\Models\$MODELNAME;
 
 use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMECreated;
