@@ -1,8 +1,8 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
-use FlowflexComponents\Generators\Commands\Creators\DaoCreator;
+use EdStevo\Generators\Commands\Creators\DaoCreator;
 use Illuminate\Console\Command;
 
 class InstallDaoSystem extends Command

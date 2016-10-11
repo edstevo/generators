@@ -4,7 +4,7 @@
  *  This was created by Ed Stephenson (edward@flowflex.com).
  *  You must get permission to use this work.
  */
-namespace FlowflexComponents\Generators\Contracts\Dao;
+namespace EdStevo\Generators\Contracts\Dao;
 
 interface DaoBase
 {
@@ -126,7 +126,7 @@ interface DaoBase
     /**
      * Throw exception when model cannot be found
      *
-     * @throws  \FlowflexComponents\Generators\Dao\Exceptions\ModelNotFoundException
+     * @throws  \EdStevo\Generators\Dao\Exceptions\ModelNotFoundException
      */
     public function notFound();
 

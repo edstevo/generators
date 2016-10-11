@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 
@@ -11,7 +11,7 @@ class GenerateDaoEvent extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:dao-event {type} {name}';
+    protected $signature = 'generate:dao-event {type} {name} {--relation}';
 
     /**
      * The console command description.
@@ -28,6 +28,26 @@ class GenerateDaoEvent extends GeneratorCommand
     protected function getStub()
     {
         return __DIR__.'/../stubs/Events/Dao/dao-event-main.stub';
+    }
+
+    protected function getNonDestroyUses()
+    {
+        return __DIR__.'/../stubs/Events/Uses/non-destroy.stub';
+    }
+
+    protected function getDestroyUses()
+    {
+        return __DIR__.'/../stubs/Events/Uses/destroy.stub';
+    }
+
+    protected function getDoubleVariableConstruct()
+    {
+        return __DIR__.'/../stubs/Events/Constructs/double-variable.stub';
+    }
+
+    protected function getSingleVariableConstruct()
+    {
+        return __DIR__.'/../stubs/Events/Constructs/single-variable.stub';
     }
 
     /**
@@ -50,6 +70,16 @@ class GenerateDaoEvent extends GeneratorCommand
     protected function getFormattedNameInput()
     {
         return ucwords($this->getNameInput());
+    }
+
+    protected function getRelationOption()
+    {
+        return $this->option('relation');
+    }
+
+    protected function getFormattedRelationOption()
+    {
+        return ucwords($this->getRelationOption());
     }
 
     /**
@@ -98,6 +128,26 @@ class GenerateDaoEvent extends GeneratorCommand
 
         $stub   = str_replace('$EVENTTYPE', $this->getEventName(), $stub);
 
+        if ($this->getFormattedTypeInput() == 'Destroy' || $this->getFormattedTypeInput() == 'Detach')
+        {
+            $text   = $this->files->get($this->getDestroyUses());
+            $stub   = str_replace('$USES', $text, $stub);
+        } else {
+            $text   = $this->files->get($this->getNonDestroyUses());
+            $stub   = str_replace('$USES', $text, $stub);
+        }
+
+        if ($this->getFormattedTypeInput() == 'Attach' || $this->getFormattedTypeInput() == 'Detach')
+        {
+            $construct  = $this->files->get($this->getDoubleVariableConstruct());
+            $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedNameInput()), $construct);
+            $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedRelationOption()), $construct);
+        } else {
+            $construct  = $this->files->get($this->getSingleVariableConstruct());
+            $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedNameInput()), $construct);
+        }
+
+        $stub   = str_replace('$CONSTRUCTS', $construct, $stub);
         $stub   = str_replace('$MODELNAME', $this->getFormattedNameInput(), $stub);
         $stub   = str_replace('$MODELVARIABLE', strtolower($this->getFormattedNameInput()), $stub);
 

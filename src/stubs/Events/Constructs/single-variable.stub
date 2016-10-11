@@ -1,0 +1,4 @@
+    public function __construct($$VARIABLE)
+    {
+        $this->$VARIABLE	= $$VARIABLE;
+    }

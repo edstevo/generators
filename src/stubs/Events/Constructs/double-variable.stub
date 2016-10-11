@@ -1,0 +1,5 @@
+    public function __construct($$VARIABLE_ONE, $$VARIABLE_TWO)
+    {
+        $this->$VARIABLE_ONE	= $$VARIABLE_ONE;
+        $this->$VARIABLE_TWO	= $$VARIABLE_TWO;
+    }

@@ -5,9 +5,9 @@
  *  You must get permission to use this work.
  */
 
-namespace FlowflexComponents\Generators\Dao;
+namespace EdStevo\Generators\Dao;
 
-use FlowflexComponents\Generators\Contracts\Dao\DaoBase;
+use EdStevo\Generators\Contracts\Dao\DaoBase;
 
 abstract class CriteriaBase
 {

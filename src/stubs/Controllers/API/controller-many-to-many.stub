@@ -87,6 +87,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 	public function update(Update$MODELNAME$RELATIONNAMERequest $request, $$MODELVARIABLEId, $$RELATIONVARIABLEId)
 	{
         $$RELATIONVARIABLEData  = $this->getRequestData($request);
+        $$MODELVARIABLE         = $this->$MODELVARIABLE->find($$MODELVARIABLEId);
 
 		foreach($$RELATIONVARIABLEData as $$RELATIONVARIABLE)
 		{
@@ -94,7 +95,7 @@ class $MODELNAME$RELATIONNAMEController extends Controller
 			unset($$RELATIONVARIABLEData[$$RELATIONVARIABLE['id']]['id']);
 		}
 
-		return response()->make($this->$MODELVARIABLE->updateRelation($$RELATIONVARIABLE, '$RELATIONVARIABLEs', $$RELATIONVARIABLEData));
+		return response()->make($this->$MODELVARIABLE->updateRelation($$MODELVARIABLE, '$RELATIONVARIABLEs', $$RELATIONVARIABLEData));
 	}
 
     /**

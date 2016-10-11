@@ -5,9 +5,9 @@
  *  You must get permission to use this work.
  */
 
-namespace FlowflexComponents\Generators\Contracts\Dao;
+namespace EdStevo\Generators\Contracts\Dao;
 
-use FlowflexComponents\Generators\Dao\CriteriaBase;
+use EdStevo\Generators\Dao\CriteriaBase;
 
 /**
  * Interface CriteriaInterface

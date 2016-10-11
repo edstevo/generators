@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 
@@ -27,7 +27,12 @@ class GenerateRequest extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__.'/../stubs/Requests/request-main.stub';
+        if ($this->getTypeInput() == 'Create' || $this->getTypeInput() == 'Update')
+        {
+            return __DIR__.'/../stubs/Requests/editing-request.stub';
+        }
+
+        return __DIR__.'/../stubs/Requests/non-editing-request.stub';
     }
 
     /**

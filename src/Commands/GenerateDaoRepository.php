@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 
@@ -11,7 +11,7 @@ class GenerateDaoRepository extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:dao-repository {name}';
+    protected $signature = 'generate:dao-repository {name} {--relation=}';
 
     /**
      * The console command description.

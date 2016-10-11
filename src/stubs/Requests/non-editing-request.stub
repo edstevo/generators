@@ -2,16 +2,10 @@
 
 namespace DummyNamespace;
 
-use App\Dao\$MODELNAME\Eloquent\$MODELNAMEDao;
 use Illuminate\Foundation\Http\FormRequest;
 
 class $REQUESTNAMERequest extends FormRequest
 {
-
-    public function __construct($MODELNAMEDao $$MODELVARIABLE)
-    {
-        $this->$MODELVARIABLE   = $$MODELVARIABLE;
-    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -30,6 +24,7 @@ class $REQUESTNAMERequest extends FormRequest
      */
     public function rules()
     {
-        return $this->$MODELVARIABLE->getRules();
+        return [];
     }
+
 }

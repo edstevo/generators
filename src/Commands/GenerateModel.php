@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 
@@ -70,16 +70,12 @@ class GenerateModel extends GeneratorCommand
 
         if ($fields)
         {
-            $fieldString    = "'".$fields->implode("', '")."'";
+            $fieldString    = $this->buildFillable($fields);
 
-            $stub  = str_replace('protected $fillable = [\'*\'];', 'protected $fillable = [' . $fieldString . '];', $stub);
-        }
+            $stub   = str_replace('protected $fillable = [\'*\'];', 'protected $fillable = ["' . $fieldString . '"];', $stub);
 
-        $rules  = $this->buildRules();
-
-        if ($fields)
-        {
-            $stub = str_replace('return [];', 'return [' . PHP_EOL . $rules . PHP_EOL . "\t\t];", $stub);
+            $rules  = $this->buildRules();
+            $stub   = str_replace('return [];', 'return [' . PHP_EOL . $rules . PHP_EOL . "\t\t];", $stub);
         }
 
         return $stub;
@@ -104,6 +100,8 @@ class GenerateModel extends GeneratorCommand
 
     private function buildRules()
     {
+        $unwanted_fields        = ['id', 'timestamps'];
+
         if (!$this->option('fields'))
             return;
 
@@ -116,7 +114,7 @@ class GenerateModel extends GeneratorCommand
             $fieldName      = $components[0];
             unset($components[0]);
 
-            if ($fieldName == 'timestamps')
+            if (in_array($fieldName, $unwanted_fields))
                 continue;
 
             array_values($components);
@@ -152,5 +150,16 @@ class GenerateModel extends GeneratorCommand
     private function getModelTableName()
     {
         return str_plural(snake_case(ucwords($this->getNameInput())));
+    }
+
+    private function buildFillable($fields)
+    {
+        $unwanted_fields        = ['id', 'timestamps'];
+
+        $fields     = collect($fields)->filter(function($value, $key) use ($unwanted_fields) {
+            return !in_array($value, $unwanted_fields);
+        });
+
+        return $fields->implode('", "');
     }
 }

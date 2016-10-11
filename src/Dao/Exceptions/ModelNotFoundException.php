@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Dao\Exceptions;
+namespace EdStevo\Generators\Dao\Exceptions;
 
 use RuntimeException;
 

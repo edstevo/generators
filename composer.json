@@ -1,5 +1,5 @@
 {
-    "name": "flowflexcomponents/generators",
+    "name": "edstevo/generators",
     "description": "Generators to speed up workflows",
     "authors": [
         {
@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "FlowflexComponents\\Generators\\": "src/"
+            "EdStevo\\Generators\\": "src/"
         }
     },
     "version": "1.0.0",

@@ -1,6 +1,6 @@
 <?php
 
-namespace FlowflexComponents\Generators\Commands;
+namespace EdStevo\Generators\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

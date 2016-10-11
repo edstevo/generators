@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use FlowflexComponents\Generators\Commands\Creators\DaoCreator;
+use EdStevo\Generators\Commands\Creators\DaoCreator;
 use Illuminate\Console\Command;
 
 class InstallRepository extends Command
