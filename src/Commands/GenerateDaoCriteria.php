@@ -3,6 +3,7 @@
 namespace EdStevo\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 
 class GenerateDaoCriteria extends GeneratorCommand
 {
@@ -11,7 +12,7 @@ class GenerateDaoCriteria extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:criteria {name} {criteria}';
+    protected $signature = 'generate:criteria {name}';
 
     /**
      * The console command description.
@@ -37,19 +38,30 @@ class GenerateDaoCriteria extends GeneratorCommand
      */
     protected $type = 'Dao Criteria';
 
-    protected function getCriteriaInput()
-    {
-        return $this->argument('criteria');
-    }
-
-    protected function getFormattedCriteriaInput()
-    {
-        return ucwords($this->getCriteriaInput());
-    }
-
     protected function getFormattedNameInput()
     {
         return ucwords($this->getNameInput());
+    }
+
+    /**
+     * Parse the name and format according to the root namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function parseName($name)
+    {
+        $rootNamespace = $this->laravel->getNamespace();
+
+        if (Str::startsWith($name, $rootNamespace)) {
+            return $name;
+        }
+
+        if (Str::contains($name, '/')) {
+            $name = str_replace('/', '\\', $name);
+        }
+
+        return $this->parseName($this->getDefaultNamespace(trim($rootNamespace, '\\')).'\\Eloquent');
     }
 
     /**
@@ -60,10 +72,9 @@ class GenerateDaoCriteria extends GeneratorCommand
      */
     protected function getPath($name)
     {
-        $name   = str_replace($this->laravel->getNamespace(), '', $name);
-        $name   = $name . "/Eloquent";
+        $name = str_replace_first($this->laravel->getNamespace(), '', $name);
 
-        return $this->laravel['path'].'/'.str_replace('\\', '/', $name)."/".$this->getFormattedCriteriaInput().'.php';
+        return $this->laravel['path'].'/'.str_replace('\\', '/', $name). '/' . $this->getFormattedNameInput() . '.php';
     }
 
     /**
@@ -89,8 +100,7 @@ class GenerateDaoCriteria extends GeneratorCommand
      */
     protected function replaceClass($stub, $name)
     {
-        $stub   = str_replace('$MODELNAME', $this->getFormattedNameInput(), $stub);
-        $stub   = str_replace('$CRITERIANAME', $this->getFormattedCriteriaInput(), $stub);
+        $stub   = str_replace('$CRITERIANAME', $this->getFormattedNameInput(), $stub);
 
         return $stub;
     }

@@ -1,4 +1,4 @@
-<?php namespace App\Dao\Criteria\$MODELNAME\Eloquent;
+<?php namespace App\Dao\Criteria\Eloquent;
 
 use App\Dao\Eloquent\CriteriaBase;
 use App\Contracts\Dao\DaoBase;
