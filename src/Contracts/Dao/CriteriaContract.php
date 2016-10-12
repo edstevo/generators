@@ -5,9 +5,9 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Contracts\Dao;
+namespace App\Contracts\Dao;
 
-use EdStevo\Generators\Dao\CriteriaBase;
+use App\Dao\CriteriaBase;
 
 /**
  * Interface CriteriaInterface
@@ -17,10 +17,15 @@ interface CriteriaContract
 {
 
     /**
+     * @return $this
+     */
+    public function resetScope();
+
+    /**
      * @param bool $status
      * @return $this
      */
-    public function skipCriteria($status = true);
+    public function skipCriteria(bool $status = true);
 
     /**
      * @return mixed

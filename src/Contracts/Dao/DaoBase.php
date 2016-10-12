@@ -4,7 +4,7 @@
  *  This was created by Ed Stephenson (edward@flowflex.com).
  *  You must get permission to use this work.
  */
-namespace EdStevo\Generators\Contracts\Dao;
+namespace App\Contracts\Dao;
 
 interface DaoBase
 {
@@ -23,7 +23,7 @@ interface DaoBase
      *
      * @return  \Illuminate\Database\Eloquent\Model;
      */
-    public function store($data);
+    public function store(array $data);
 
     /**
      * Retrieve an entry of the resource from the DB by its ID
@@ -53,7 +53,7 @@ interface DaoBase
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere($data);
+    public function findWhere(array $data);
 
     /**
      * Retrieve multiple entries of the resource from the DB where it matches certain criteria
@@ -62,7 +62,7 @@ interface DaoBase
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function where($data);
+    public function where(array $data);
 
     /**
      * Update the specified resource in the DB.
@@ -92,7 +92,7 @@ interface DaoBase
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelation($model, $relationship);
+    public function getRelation($model, string $relation);
 
     /**
      * Retrieve all entries of a resource related to this model from the DB with constraints
@@ -103,7 +103,7 @@ interface DaoBase
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, $relation, $constraints = []);
+    public function getRelationWhere($model, string $relation, array $constraints = []);
 
     /**
      * Put a new resource in storage that is related to another resource
@@ -114,7 +114,53 @@ interface DaoBase
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, $relation, $data);
+    public function storeRelation($model, string $relation, array $data);
+
+    /**
+     * Update a relation of the model
+     *
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param string                                $relation
+     * @param array                                 $data
+     * @param null                                  $id
+     * @param string                                $attribute
+     *
+     * @return mixed|void
+     */
+    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id");
+
+    /**
+     * Associate a model with a relation via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int                                 $relation_id
+     *
+     * @param   array
+     */
+    public function attach($model, string $relationship, $relation_id);
+
+    /**
+     * Sync a model and its relations via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int/string                          $relation_id
+     *
+     * @param   array
+     */
+    public function sync($model, string $relationship, $relation_id, $detaching = true);
+
+    /**
+     * Dissociate a model with a relation via a pivot
+     *
+     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   string                              $relation
+     * @param   int/string                          $relation_id
+     *
+     * @param   array
+     */
+    public function detach($model, $relationship, $relation_id);
 
     /**
      * Get the validation rules associated with a model
@@ -126,7 +172,7 @@ interface DaoBase
     /**
      * Throw exception when model cannot be found
      *
-     * @throws  \EdStevo\Generators\Dao\Exceptions\ModelNotFoundException
+     * @throws  \App\Dao\Exceptions\ModelNotFoundException
      */
     public function notFound();
 
