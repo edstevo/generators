@@ -3,18 +3,18 @@
 namespace DummyNamespace;
 
 use App\Dao\Eloquent\DaoBase;
-use App\Models\$MODELNAME;
+use App\Models\$MODELNAME as $MODELNAMEModel;
 
-use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMECreated;
-use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEUpdated;
-use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEDestroyed;
+use App\Events\$MODELNAME\$MODELNAME\$MODELNAMECreated;
+use App\Events\$MODELNAME\$MODELNAME\$MODELNAMEUpdated;
+use App\Events\$MODELNAME\$MODELNAME\$MODELNAMEDestroyed;
 
 class $CLASSNAME extends DaoBase
 {
 
     protected function model()
     {
-        return $MODELNAME::class;
+        return $MODELNAMEModel::class;
     }
 
     public function store(array $data)
