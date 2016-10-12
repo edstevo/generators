@@ -17,7 +17,7 @@ class $CLASSNAME extends DaoBase
         return $MODELNAME::class;
     }
 
-    public function store($data)
+    public function store(array $data)
     {
         $new_model      = parent::store($data);
 

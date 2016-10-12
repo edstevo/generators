@@ -9,6 +9,7 @@ namespace App\Dao\Eloquent;
 
 use App\Contracts\Dao\CriteriaContract;
 use App\Contracts\Dao\DaoBase as DaoBaseContract;
+use App\Dao\CriteriaBase;
 use App\Dao\Exceptions\ModelNotFoundException;
 use App\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
@@ -77,7 +78,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return  \Illuminate\Database\Eloquent\Model;
      */
-    public function store($data)
+    public function store(array $data)
     {
         return $this->model->create($data);
     }
@@ -118,7 +119,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere($data)
+    public function findWhere(array $data)
     {
         return $this->model->where($data)->first();
     }
@@ -130,7 +131,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function where($data)
+    public function where(array $data)
     {
         $this->applyCriteria();
         return $this->model->where($data)->get();
@@ -184,7 +185,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, $relation, $constraints = [])
+    public function getRelationWhere($model, $relation, array $constraints = [])
     {
         return $model->$relation()->where($constraints)->get();
     }
@@ -198,7 +199,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, $relation, $data)
+    public function storeRelation($model, $relation, array $data)
     {
         return $model->$relation()->create($data);
     }
@@ -276,7 +277,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relation
-     * @param   int                                 $relation_id
+     * @param   int/string                          $relation_id
      *
      * @param   array
      */
@@ -290,7 +291,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relation
-     * @param   int                                 $relation_id
+     * @param   int/string                          $relation_id
      *
      * @param   array
      */
@@ -328,8 +329,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     }
 
     /**
-     * @param bool $status
-     * @return $this
+     * @param   bool    $status
+     * @return  $this
      */
     public function skipCriteria($status = true){
         $this->skipCriteria = $status;
@@ -337,24 +338,24 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     }
 
     /**
-     * @return mixed
+     * @return  mixed
      */
     public function getCriteria() {
         return $this->criteria;
     }
 
     /**
-     * @param CriteriaBase $criteria
-     * @return $this
+     * @param   CriteriaBase    $criteria
+     * @return  $this
      */
     public function getByCriteria(CriteriaBase $criteria) {
-        $this->model = $criteria->apply($this->model, $this);
+        $this->model    = $criteria->apply($this->model, $this);
         return $this;
     }
 
     /**
-     * @param CriteriaBase $criteria
-     * @return $this
+     * @param   CriteriaBase    $criteria
+     * @return  $this
      */
     public function pushCriteria(CriteriaBase $criteria) {
         $this->criteria->push($criteria);
