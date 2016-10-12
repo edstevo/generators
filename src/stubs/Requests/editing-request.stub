@@ -2,13 +2,13 @@
 
 namespace DummyNamespace;
 
-use App\Dao\$MODELNAME\Eloquent\$MODELNAMEDao;
+use App\Dao\$MODELNAME;
 use Illuminate\Foundation\Http\FormRequest;
 
 class $REQUESTNAMERequest extends FormRequest
 {
 
-    public function __construct($MODELNAMEDao $$MODELVARIABLE)
+    public function __construct($MODELNAME $$MODELVARIABLE)
     {
         $this->$MODELVARIABLE   = $$MODELVARIABLE;
     }

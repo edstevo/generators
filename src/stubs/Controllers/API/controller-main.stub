@@ -8,7 +8,7 @@ use $ROOTNAMESPACEHttp\Requests;
 use $ROOTNAMESPACEHttp\Controllers\Controller;
 
 //  Dao Repository
-use $ROOTNAMESPACEDao\$MODELNAME\Eloquent\$MODELNAMEDao;
+use $ROOTNAMESPACEDao\$MODELNAME;
 
 //  Requests
 use $ROOTNAMESPACEHttp\Requests\$MODELNAME\$MODELNAME\Create$MODELNAMERequest;
@@ -19,7 +19,7 @@ class $MODELNAMEController extends Controller
 {
     protected $$MODELVARIABLE;
 
-    public function __construct($MODELNAMEDao $$MODELVARIABLE)
+    public function __construct($MODELNAME $$MODELVARIABLE)
     {
         $this->$MODELVARIABLE   = $$MODELVARIABLE;
     }
