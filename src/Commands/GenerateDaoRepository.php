@@ -50,10 +50,10 @@ class GenerateDaoRepository extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        $path  = config('generators.dao.path');
-        $path  = str_replace("/", "\\", $path);
+        $path   = config('generators.dao.path');
+        $path   = str_replace("/", "\\", $path);
 
-        return $rootNamespace.$path."\\".$this->getFormattedNameInput();
+        return $rootNamespace.$path;
     }
 
     /**
@@ -66,7 +66,7 @@ class GenerateDaoRepository extends GeneratorCommand
     {
         $name = str_replace($this->laravel->getNamespace(), '', $name);
 
-        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'Dao.php';
+        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**

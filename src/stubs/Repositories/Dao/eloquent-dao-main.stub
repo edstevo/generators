@@ -9,7 +9,7 @@ use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMECreated;
 use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEUpdated;
 use App\Events\Dao\$MODELNAME\$MODELNAME\$MODELNAMEDestroyed;
 
-class $CLASSNAMEDao extends DaoBase
+class $CLASSNAME extends DaoBase
 {
 
     protected function model()

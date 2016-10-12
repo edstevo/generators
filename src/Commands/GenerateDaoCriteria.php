@@ -60,7 +60,8 @@ class GenerateDaoCriteria extends GeneratorCommand
      */
     protected function getPath($name)
     {
-        $name = str_replace($this->laravel->getNamespace(), '', $name);
+        $name   = str_replace($this->laravel->getNamespace(), '', $name);
+        $name   = $name . "/Eloquent";
 
         return $this->laravel['path'].'/'.str_replace('\\', '/', $name)."/".$this->getFormattedCriteriaInput().'.php';
     }

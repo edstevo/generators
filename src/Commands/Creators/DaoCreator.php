@@ -32,10 +32,10 @@ class DaoCreator
         }
 
         // Check if the dao directory exists.
-        if(!$this->files->isDirectory(app()->path() . $this->daoDirectory))
+        if(!$this->files->isDirectory(app()->path() . $this->daoDirectory . "/Eloquent"))
         {
             // Create the dao directory if not.
-            $this->files->makeDirectory(app()->path() . $this->daoDirectory, 0755, true);
+            $this->files->makeDirectory(app()->path() . $this->daoDirectory . "/Eloquent", 0755, true);
         }
 
         // Check if the exception directory exists.
