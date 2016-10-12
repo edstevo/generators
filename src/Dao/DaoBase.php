@@ -272,14 +272,22 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      * Associate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   int                                 $relation_id
+     * @param   string                              $relationship
+     * @param   \Illuminate\Database\Eloquent\Model $relation
      *
      * @param   array
      */
-    public function attach($model, string $relationship, $relation_id)
+    public function attach($model, string $relationship, $relation)
     {
-        return $model->$relationship()->attach($relation_id);
+        $result         = $model->$relationship()->attach($relation->id);
+
+        $modelName      = $this->getClassName(get_class($model));
+        $relationName   = $this->getClassName(get_class($relation));
+        $eventName      = $this->getEventNamespace($modelName, $relationName, "Attached");
+
+        event(new $eventName($model, $relation));
+
+        return $result;
     }
 
     /**
@@ -300,14 +308,22 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      * Dissociate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   int/string                          $relation_id
+     * @param   string                              $relationship
+     * @param   \Illuminate\Database\Eloquent\Model $relation
      *
      * @param   array
      */
-    public function detach($model, $relationship, $relation_id)
+    public function detach($model, $relationship, $relation)
     {
-        return $model->$relationship()->detach($relation_id);
+        $result         = $model->$relationship()->detach($relation->id);
+
+        $modelName      = $this->getClassName(get_class($model));
+        $relationName   = $this->getClassName(get_class($relation));
+        $eventName      = $this->getEventNamespace($modelName, $relationName, "Detached");
+
+        event(new $eventName($model, $relation));
+
+        return $result;
     }
 
     /**

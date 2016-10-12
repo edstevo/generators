@@ -133,12 +133,12 @@ interface DaoBase
      * Associate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   int                                 $relation_id
+     * @param   string                              $relationship
+     * @param   \Illuminate\Database\Eloquent\Model $relation
      *
      * @param   array
      */
-    public function attach($model, string $relationship, $relation_id);
+    public function attach($model, string $relationship, $relation);
 
     /**
      * Sync a model and its relations via a pivot
@@ -155,12 +155,12 @@ interface DaoBase
      * Dissociate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   int/string                          $relation_id
+     * @param   string                              $relationship
+     * @param   \Illuminate\Database\Eloquent\Model $relation
      *
      * @param   array
      */
-    public function detach($model, $relationship, $relation_id);
+    public function detach($model, $relationship, $relation);
 
     /**
      * Get the validation rules associated with a model
