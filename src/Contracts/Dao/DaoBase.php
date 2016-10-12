@@ -176,4 +176,23 @@ interface DaoBase
      */
     public function notFound();
 
+    /**
+     * Get the Name of the Related Model
+     *
+     * @param $model
+     * @param $relation
+     *
+     * @return mixed
+     */
+    public function getRelationModel($model, $relation);
+
+    /**
+     * Get the Class Name from a namespace
+     *
+     * @param $namespace
+     *
+     * @return mixed
+     */
+    public function getClassName($namespace);
+
 }

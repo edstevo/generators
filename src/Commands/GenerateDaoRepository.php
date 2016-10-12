@@ -79,8 +79,8 @@ class GenerateDaoRepository extends GeneratorCommand
     protected function replaceClass($stub, $name)
     {
         $class  = str_replace($this->getNamespace($name).'\\', '', $name);
-        $stub   = str_replace('$CLASSNAME', $class, $stub);
 
+        $stub   = str_replace('$CLASSNAME', $class, $stub);
         $stub   = str_replace('$MODELNAME', $this->getFormattedNameInput(), $stub);
 
         return $stub;

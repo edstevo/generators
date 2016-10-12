@@ -9,7 +9,7 @@ namespace App\Dao\Eloquent;
 
 use App\Contracts\Dao\CriteriaContract;
 use App\Contracts\Dao\DaoBase as DaoBaseContract;
-use App\Dao\CriteriaBase;
+use App\Dao\Eloquent\CriteriaBase;
 use App\Dao\Exceptions\ModelNotFoundException;
 use App\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
@@ -204,7 +204,14 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      */
     public function storeRelation($model, string $relation, array $data)
     {
-        return $model->$relation()->create($data);
+        $result     = $model->$relation()->create($data);
+
+        $modelName  = $this->getClassName(get_class($result));
+        $eventName  = $this->getEventNamespace($modelName, $modelName, "Created");
+
+        event(new $eventName($result));
+
+        return $result;
     }
 
     /**
@@ -381,4 +388,65 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
         return $this;
     }
 
+    /**
+     * Get the Name of the Related Model
+     *
+     * @param $model
+     * @param $relation
+     *
+     * @return mixed
+     */
+    public function getRelationModel($model, $relation)
+    {
+        $relatedModel   = $model->$relation()->getRelated();
+        $className      = get_class($relatedModel);
+        return $this->getClassName($className);
+    }
+
+    /**
+     * Get the Class Name from a namespace
+     *
+     * @param $namespace
+     *
+     * @return mixed
+     */
+    public function getClassName($namespace)
+    {
+        $namespaceParts = explode("\\", $namespace);
+        return collect($namespaceParts)->last();
+    }
+
+    /**
+     * Get the app namespace
+     *
+     * @return string
+     */
+    private function getAppNamespace()
+    {
+        return app()->getNamespace();
+    }
+
+    /**
+     * Get the events namespace
+     *
+     * @return string
+     */
+    private function getEventsNamespace()
+    {
+        return $this->getAppNamespace() . "Events\\";
+    }
+
+    /**
+     * Get the namespace for an event
+     *
+     * @param string $parentModel
+     * @param string $relationModel
+     * @param string $event
+     *
+     * @return string
+     */
+    private function getEventNamespace(string $parentModel, string $relationModel, string $event)
+    {
+        return $this->getEventsNamespace() . $parentModel . "\\" . $relationModel . "\\" . $relationModel . $event;
+    }
 }

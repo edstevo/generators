@@ -5,10 +5,6 @@ namespace DummyNamespace;
 use App\Dao\Eloquent\DaoBase;
 use App\Models\$MODELNAME as $MODELNAMEModel;
 
-use App\Events\$MODELNAME\$MODELNAME\$MODELNAMECreated;
-use App\Events\$MODELNAME\$MODELNAME\$MODELNAMEUpdated;
-use App\Events\$MODELNAME\$MODELNAME\$MODELNAMEDestroyed;
-
 class $CLASSNAME extends DaoBase
 {
 
@@ -17,33 +13,4 @@ class $CLASSNAME extends DaoBase
         return $MODELNAMEModel::class;
     }
 
-    public function store(array $data)
-    {
-        $new_model      = parent::store($data);
-
-        event(new $MODELNAMECreated($new_model));
-
-        return $new_model;
-    }
-
-    public function update(array $data, $id, $attribute = "id")
-    {
-        $updated_model  = parent::update($data, $id, $attribute);
-
-        event(new $MODELNAMEUpdated($updated_model));
-
-        return $updated_model;
-    }
-
-    public function destroy($model)
-    {
-        $result         = parent::destroy($model);
-
-        if ($result)
-        {
-            event(new $MODELNAMEDestroyed($model));
-        }
-
-        return $result;
-    }
 }

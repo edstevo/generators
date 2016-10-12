@@ -7,12 +7,8 @@
 
 namespace App\Contracts\Dao;
 
-use App\Dao\CriteriaBase;
+use App\Dao\Eloquent\CriteriaBase;
 
-/**
- * Interface CriteriaInterface
- * @package Bosnadev\Repositories\Contracts
- */
 interface CriteriaContract
 {
 
