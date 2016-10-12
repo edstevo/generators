@@ -13,6 +13,9 @@ use App\Dao\CriteriaBase;
 use App\Dao\Exceptions\ModelNotFoundException;
 use App\Dao\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 
 abstract class DaoBase implements DaoBaseContract, CriteriaContract
@@ -171,7 +174,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelation($model, $relation)
+    public function getRelation($model, string $relation)
     {
         return $model->$relation;
     }
@@ -185,7 +188,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, $relation, array $constraints = [])
+    public function getRelationWhere($model, string $relation, array $constraints = [])
     {
         return $model->$relation()->where($constraints)->get();
     }
@@ -199,7 +202,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, $relation, array $data)
+    public function storeRelation($model, string $relation, array $data)
     {
         return $model->$relation()->create($data);
     }
@@ -215,7 +218,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return mixed|void
      */
-    public function updateRelation($model, $relation, array $data, $id = null, $attribute = "id")
+    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id")
     {
         if ($model->$relation() instanceof HasMany)
         {
@@ -233,7 +236,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
         }
     }
 
-    private function updateRelationHasMany($model, $relation, array $data, $id)
+    private function updateRelationHasMany($model, string $relation, array $data, $id)
     {
 //        TODO: Finish
     }
@@ -248,12 +251,12 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @return mixed
      */
-    private function updateRelationBelongsToMany($model, $relation, array $data, $id)
+    private function updateRelationBelongsToMany($model, string $relation, array $data, $id)
     {
         return $model->$relation()->sync($data, false);
     }
 
-    private function updateRelationMorphTo($model, $relation, array $data, $id)
+    private function updateRelationMorphTo($model, string $relation, array $data, $id)
     {
 //        TODO: Finish
     }
@@ -267,7 +270,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   array
      */
-    public function attach($model, $relationship, $relation_id)
+    public function attach($model, string $relationship, $relation_id)
     {
         return $model->$relationship()->attach($relation_id);
     }
@@ -281,7 +284,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      *
      * @param   array
      */
-    public function sync($model, $relationship, $relation_id, $detaching = true)
+    public function sync($model, string $relationship, $relation_id, $detaching = true)
     {
         return $model->$relationship()->sync($relation_id, $detaching);
     }
@@ -332,7 +335,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
      * @param   bool    $status
      * @return  $this
      */
-    public function skipCriteria($status = true){
+    public function skipCriteria(bool $status = true)
+    {
         $this->skipCriteria = $status;
         return $this;
     }
