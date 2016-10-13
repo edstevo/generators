@@ -494,7 +494,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function generateMultiple(int $number = 2, array $data = [], bool $persist = true) : Model
+    public function generateMultiple(int $number = 2, array $data = [], bool $persist = true) : Collection
     {
         if ($persist)
         {
