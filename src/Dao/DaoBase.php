@@ -84,6 +84,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function store(array $data)
     {
+        $data       = $this->cleanData($data);
+
         return $this->model->create($data);
     }
 
@@ -152,6 +154,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function update(array $data, $id, $attribute = "id")
     {
+        $data       = $this->cleanData($data);
+
         return $this->model->where($attribute, '=', $id)->update($data);
     }
 
@@ -205,6 +209,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function storeRelation($model, string $relation, array $data)
     {
+        $data       = $this->cleanData($data, $model->$relation()->getRelated());
+
         $result     = $model->$relation()->create($data);
 
         $modelName  = $this->getClassName(get_class($result));
@@ -228,6 +234,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id")
     {
+
         if ($model->$relation() instanceof HasMany)
         {
             return $this->updateRelationHasMany($model, $relation, $data, $id);
@@ -502,5 +509,24 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
         }
 
         return factory($this->model(), $number)->make($data);
+    }
+
+    /**
+     * Clean a data set to only allow the correct data for this model
+     *
+     * @param array                               $data
+     * @param \Illuminate\Database\Eloquent\Model $model
+     *
+     * @return array
+     */
+    private function cleanData(array $data, Model $model = null) : array
+    {
+        if (is_null($model))
+            $model          = $this->model;
+
+        $allowed_fields     = $model->getFillable();
+        $data               = collect($data);
+
+        return $data->only($allowed_fields)->toArray();
     }
 }
