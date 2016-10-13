@@ -9,6 +9,7 @@ namespace App\Dao\Eloquent;
 
 use App\Contracts\Dao\CriteriaContract;
 use App\Contracts\Dao\DaoBase as DaoBaseContract;
+use App\Contracts\Dao\GeneratorContract;
 use App\Dao\Eloquent\CriteriaBase;
 use App\Dao\Exceptions\ModelNotFoundException;
 use App\Dao\Exceptions\RepositoryException;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 
-abstract class DaoBase implements DaoBaseContract, CriteriaContract
+abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorContract
 {
 
     /**
@@ -464,5 +465,42 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract
     private function getEventNamespace(string $parentModel, string $relationModel, string $event)
     {
         return $this->getEventsNamespace() . $parentModel . "\\" . $relationModel . "\\" . $relationModel . $event;
+    }
+
+    /**
+     * Generate examples of this model
+     *
+     * @param array $data
+     * @param bool  $persist
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function generate(array $data = [], bool $persist = true) : Model
+    {
+        if ($persist)
+        {
+            return factory($this->model())->create($data);
+        }
+
+        return factory($this->model())->make($data);
+    }
+
+    /**
+     * Generate multiple examples of this model
+     *
+     * @param int   $number
+     * @param array $data
+     * @param bool  $persist
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function generateMultiple(int $number = 2, array $data = [], bool $persist = true) : Model
+    {
+        if ($persist)
+        {
+            return factory($this->model(), $number)->create($data);
+        }
+
+        return factory($this->model(), $number)->make($data);
     }
 }
