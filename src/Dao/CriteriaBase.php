@@ -7,16 +7,16 @@
 
 namespace EdStevo\Generators\Dao\Eloquent;
 
-use EdStevo\Generators\Contracts\Dao\DaoBase;
+use EdStevo\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
 
 abstract class CriteriaBase
 {
 
     /**
      * @param $model
-     * @param DaoBase $repository
+     * @param DaoBaseContract $repository
      * @return mixed
      */
-    public abstract function apply($model, DaoBase $repository);
+    public abstract function apply($model, DaoBaseContract $repository);
 
 }
