@@ -23,7 +23,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
 {
 
     /**
-     * @var
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
@@ -51,11 +51,16 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     abstract protected function model();
 
+
     /**
-     * @return Model
-     * @throws RepositoryException
+     * Set the model for the repository
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     *
+     * @throws \App\Dao\Exceptions\RepositoryException
      */
-    protected function makeModel() {
+    protected function makeModel() : Model
+    {
         $model  = resolve($this->model());
 
         if (!$model instanceof Model)
@@ -69,7 +74,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all()
+    public function all() : Collection
     {
         $this->applyCriteria();
         return $this->model->get();
@@ -82,7 +87,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return  \Illuminate\Database\Eloquent\Model;
      */
-    public function store(array $data)
+    public function store(array $data) : Model
     {
         $data       = $this->cleanData($data);
 
@@ -96,7 +101,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function find($id)
+    public function find($id) : Model
     {
         $this->applyCriteria();
         return $this->model->find($id);
@@ -112,7 +117,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException;
      */
-    public function findOrFail($id)
+    public function findOrFail($id) : Model
     {
         $this->applyCriteria();
         return $this->model->findOrFail($id);
@@ -125,7 +130,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data)
+    public function findWhere(array $data) : Model
     {
         return $this->model->where($data)->first();
     }
@@ -137,7 +142,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function where(array $data)
+    public function where(array $data) : Collection
     {
         $this->applyCriteria();
         return $this->model->where($data)->get();
@@ -146,13 +151,13 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     /**
      * Update the specified resource in the DB.
      *
-     * @param   array   $data
-     * @param   int     $id
-     * @param   string  $attribute
+     * @param array  $data
+     * @param int    $id
+     * @param string $attribute
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return bool
      */
-    public function update(array $data, $id, $attribute = "id")
+    public function update(array $data, $id, $attribute = "id") : bool
     {
         $data       = $this->cleanData($data);
 
@@ -166,7 +171,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return  boolean
      */
-    public function destroy($model)
+    public function destroy($model) : bool
     {
         return $model->delete();
     }
@@ -179,7 +184,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelation($model, string $relation)
+    public function getRelation($model, string $relation) : Collection
     {
         return $model->$relation;
     }
@@ -193,7 +198,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, string $relation, array $constraints = [])
+    public function getRelationWhere($model, string $relation, array $constraints = []) : Collection
     {
         return $model->$relation()->where($constraints)->get();
     }
@@ -207,7 +212,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, string $relation, array $data)
+    public function storeRelation($model, string $relation, array $data) : Model
     {
         $data       = $this->cleanData($data, $model->$relation()->getRelated());
 
@@ -230,34 +235,48 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param null                                  $id
      * @param string                                $attribute
      *
-     * @return mixed|void
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id")
+    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id") : Model
     {
+        $data    = $this->cleanData($data, $model->$relation()->getRelated());
 
         if ($model->$relation() instanceof HasMany)
         {
-            return $this->updateRelationHasMany($model, $relation, $data, $id);
+            $this->updateRelationHasMany($model, $relation, $data, $id);
         }
 
         if ($model->$relation() instanceof BelongsToMany)
         {
-            return $this->updateRelationBelongsToMany($model, $relation, $data, $id);
+            $this->updateRelationBelongsToMany($model, $relation, $data, $id, $attribute);
         }
 
         if ($model->$relation() instanceof MorphTo)
         {
-            return $this->updateRelationMorphTo($model, $relation, $data, $id);
+            $this->updateRelationMorphTo($model, $relation, $data, $id);
         }
-    }
 
-    private function updateRelationHasMany($model, string $relation, array $data, $id)
-    {
-//        TODO: Finish
+        return $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
     }
 
     /**
-     * Update the pivot table on a many to many relationship
+     * Update the related model via a has many relationship
+     *
+     * @param        $model
+     * @param string $relation
+     * @param array  $data
+     * @param        $id
+     * @param string $attribute
+     *
+     * @return bool
+     */
+    private function updateRelationHasMany($model, string $relation, array $data, $id, $attribute = 'id') : bool
+    {
+        return $model->$relation()->where($attribute, $id)->first()->update($data);
+    }
+
+    /**
+     * Update the related model via a many to many relationship
      *
      * @param \Illuminate\Database\Eloquent\Model   $model
      * @param string                                $relation
@@ -266,9 +285,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return mixed
      */
-    private function updateRelationBelongsToMany($model, string $relation, array $data, $id)
+    private function updateRelationBelongsToMany($model, string $relation, array $data, $id, $attribute = 'id') : bool
     {
-        return $model->$relation()->sync($data, false);
+        return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
 
     private function updateRelationMorphTo($model, string $relation, array $data, $id)
@@ -285,7 +304,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function attach($model, string $relationship, $relation)
+    public function attach($model, string $relationship, $relation) : array
     {
         $result         = $model->$relationship()->attach($relation->id);
 
@@ -307,7 +326,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function sync($model, string $relationship, $relation_id, $detaching = true)
+    public function sync($model, string $relationship, $relation_id, $detaching = true) : array
     {
         return $model->$relationship()->sync($relation_id, $detaching);
     }
@@ -321,7 +340,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function detach($model, $relationship, $relation)
+    public function detach($model, $relationship, $relation) : array
     {
         $result         = $model->$relationship()->detach($relation->id);
 
@@ -339,7 +358,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return  array
      */
-    public function getRules()
+    public function getRules() : array
     {
         return $this->model->rules();
     }
@@ -357,7 +376,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     /**
      * @return $this
      */
-    public function resetScope() {
+    public function resetScope()
+    {
         $this->skipCriteria(false);
         return $this;
     }
@@ -375,7 +395,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     /**
      * @return  mixed
      */
-    public function getCriteria() {
+    public function getCriteria()
+    {
         return $this->criteria;
     }
 
@@ -383,7 +404,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   CriteriaBase    $criteria
      * @return  $this
      */
-    public function getByCriteria(CriteriaBase $criteria) {
+    public function getByCriteria(CriteriaBase $criteria)
+    {
         $this->model    = $criteria->apply($this->model, $this);
         return $this;
     }
@@ -392,7 +414,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   CriteriaBase    $criteria
      * @return  $this
      */
-    public function pushCriteria(CriteriaBase $criteria) {
+    public function pushCriteria(CriteriaBase $criteria)
+    {
         $this->criteria->push($criteria);
         return $this;
     }
@@ -400,7 +423,8 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     /**
      * @return $this
      */
-    public function  applyCriteria() {
+    public function  applyCriteria()
+    {
         if($this->skipCriteria === true)
             return $this;
 
@@ -418,9 +442,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param $model
      * @param $relation
      *
-     * @return mixed
+     * @return string
      */
-    public function getRelationModel($model, $relation)
+    public function getRelationModel($model, $relation) : string
     {
         $relatedModel   = $model->$relation()->getRelated();
         $className      = get_class($relatedModel);
@@ -432,9 +456,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param $namespace
      *
-     * @return mixed
+     * @return string
      */
-    public function getClassName($namespace)
+    public function getClassName($namespace) : string
     {
         $namespaceParts = explode("\\", $namespace);
         return collect($namespaceParts)->last();
@@ -445,7 +469,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return string
      */
-    private function getAppNamespace()
+    private function getAppNamespace() : string
     {
         return app()->getNamespace();
     }
@@ -455,7 +479,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return string
      */
-    private function getEventsNamespace()
+    private function getEventsNamespace() : string
     {
         return $this->getAppNamespace() . "Events\\";
     }
@@ -469,7 +493,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return string
      */
-    private function getEventNamespace(string $parentModel, string $relationModel, string $event)
+    private function getEventNamespace(string $parentModel, string $relationModel, string $event) : string
     {
         return $this->getEventsNamespace() . $parentModel . "\\" . $relationModel . "\\" . $relationModel . $event;
     }
@@ -527,6 +551,12 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
         $allowed_fields     = $model->getFillable();
         $data               = collect($data);
 
-        return $data->only($allowed_fields)->toArray();
+        $data               = $data->only($allowed_fields);
+        $data               = $data->filter(function($item, $key) {
+            if ($item)
+                return $item;
+        });
+
+        return $data->toArray();
     }
 }

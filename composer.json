@@ -13,5 +13,8 @@
         }
     },
     "version": "1.0.0",
-    "require": {}
+    "require": {
+        "php": ">=7",
+        "laravel/framework": "5.3.*"
+    }
 }
