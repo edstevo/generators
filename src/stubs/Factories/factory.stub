@@ -1,0 +1,8 @@
+<?php
+
+$factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
+
+    return [
+        $FIELDS
+    ];
+});

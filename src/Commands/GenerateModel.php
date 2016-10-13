@@ -30,6 +30,11 @@ class GenerateModel extends GeneratorCommand
         return __DIR__.'/../stubs/Models/model-main.stub';
     }
 
+    protected function getFactoryStub()
+    {
+        return __DIR__.'/../stubs/Factories/factory.stub';
+    }
+
     /**
      * The type of class being generated.
      *
@@ -49,6 +54,11 @@ class GenerateModel extends GeneratorCommand
         $modelPath  = str_replace("/", "\\", $modelPath);
 
         return $rootNamespace.$modelPath;
+    }
+
+    private function getModelName()
+    {
+        return ucwords($this->getNameInput());
     }
 
     /**
@@ -77,6 +87,8 @@ class GenerateModel extends GeneratorCommand
             $rules  = $this->buildRules();
             $stub   = str_replace('return [];', 'return [' . PHP_EOL . $rules . PHP_EOL . "\t\t];", $stub);
         }
+
+        $this->buildFactory();
 
         return $stub;
     }
@@ -161,5 +173,27 @@ class GenerateModel extends GeneratorCommand
         });
 
         return $fields->implode('", "');
+    }
+
+    private function buildFactory()
+    {
+        $stub   = $this->files->get($this->getFactoryStub());
+        $stub   = str_replace('$CLASSNAME', $this->getModelName(), $stub);
+
+        $field_string   = '';
+
+        foreach($this->getFields() as $field)
+        {
+            $unwanted_fields    = ['id', 'timestamps'];
+
+            if(in_array($field, $unwanted_fields))
+                continue;
+
+            $field_string   .= '"' . $field . '" => ""' . PHP_EOL . "\t\t";
+        }
+
+        $stub   = str_replace('$FIELDS', $field_string, $stub);
+
+        $this->files->put(database_path('factories/' . $this->getModelName() . ".php"), $stub);
     }
 }
