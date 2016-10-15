@@ -302,19 +302,17 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
      *
-     * @param   array
+     * @returns   void
      */
-    public function attach($model, string $relationship, $relation) : array
+    public function attach($model, string $relationship, $relation)
     {
-        $result         = $model->$relationship()->attach($relation->id);
+        $model->$relationship()->attach($relation->id);
 
         $modelName      = $this->getClassName(get_class($model));
         $relationName   = $this->getClassName(get_class($relation));
         $eventName      = $this->getEventNamespace($modelName, $relationName, "Attached");
 
         event(new $eventName($model, $relation));
-
-        return $result;
     }
 
     /**
