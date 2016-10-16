@@ -301,10 +301,11 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
+     * @param   array                               $pivot_data
      *
      * @returns   void
      */
-    public function attach($model, string $relationship, $relation)
+    public function attach($model, string $relationship, $relation, array $pivot_data = []) : void
     {
         $model->$relationship()->attach($relation->id);
 
@@ -321,10 +322,11 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relation
      * @param   int/string                          $relation_id
+     * @param   bool                                $detaching
      *
      * @param   array
      */
-    public function sync($model, string $relationship, $relation_id, $detaching = true) : array
+    public function sync($model, string $relationship, $relation_id, bool $detaching = true) : array
     {
         return $model->$relationship()->sync($relation_id, $detaching);
     }
@@ -338,7 +340,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function detach($model, $relationship, $relation) : array
+    public function detach($model, string $relationship, $relation) : array
     {
         $result         = $model->$relationship()->detach($relation->id);
 
