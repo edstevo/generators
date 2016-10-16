@@ -303,9 +303,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $relation
      * @param   array                               $pivot_data
      *
-     * @returns   void
+     * @returns void
      */
-    public function attach($model, string $relationship, $relation, array $pivot_data = []) : void
+    public function attach($model, string $relationship, $relation, array $pivot_data = [])
     {
         $model->$relationship()->attach($relation->id);
 
