@@ -122,7 +122,7 @@ class GenerateMigration extends Command
         $stub           = $this->files->get($this->getStub());
 
         $tableName      = str_plural(strtolower($this->getFormattedTableName()));
-        $migrationName  = $this->getFormattedTableType() . $this->getFormattedTableName() . "Table";
+        $migrationName  = $this->getFormattedTableType() . str_plural($this->getFormattedTableName()) . "Table";
 
         $stub           = str_replace("DummyClass", $migrationName, $stub);
         $stub           = str_replace("DummyTable", $this->getVariableTableName(), $stub);

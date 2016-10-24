@@ -130,7 +130,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data) : Model
+    public function findWhere(array $data)
     {
         return $this->model->where($data)->first();
     }
@@ -301,19 +301,20 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
-     * @param   array                               $pivot_data
      *
-     * @returns void
+     * @param   array
      */
-    public function attach($model, string $relationship, $relation, array $pivot_data = [])
+    public function attach($model, string $relationship, $relation) : array
     {
-        $model->$relationship()->attach($relation->id);
+        $result         = $model->$relationship()->attach($relation->id);
 
         $modelName      = $this->getClassName(get_class($model));
         $relationName   = $this->getClassName(get_class($relation));
         $eventName      = $this->getEventNamespace($modelName, $relationName, "Attached");
 
         event(new $eventName($model, $relation));
+
+        return $result;
     }
 
     /**
@@ -322,11 +323,10 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relation
      * @param   int/string                          $relation_id
-     * @param   bool                                $detaching
      *
      * @param   array
      */
-    public function sync($model, string $relationship, $relation_id, bool $detaching = true) : array
+    public function sync($model, string $relationship, $relation_id, $detaching = true) : array
     {
         return $model->$relationship()->sync($relation_id, $detaching);
     }
@@ -340,7 +340,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function detach($model, string $relationship, $relation) : array
+    public function detach($model, $relationship, $relation) : array
     {
         $result         = $model->$relationship()->detach($relation->id);
 
