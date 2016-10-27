@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Dao\Eloquent;
+namespace EdStevo\Generators\Dao;
 
 use EdStevo\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
 

@@ -2,7 +2,7 @@
 
 namespace DummyNamespace;
 
-use App\Dao\Eloquent\DaoBase;
+use EdStevo\Generators\Dao\DaoBase;
 use App\Models\$MODELNAME as $MODELNAMEModel;
 
 class $CLASSNAME extends DaoBase

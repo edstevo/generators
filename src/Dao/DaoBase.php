@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace App\Dao\Eloquent;
+namespace EdStevo\Generators\Dao;
 
 use App\Contracts\Dao\CriteriaContract;
 use App\Contracts\Dao\DaoBase as DaoBaseContract;
@@ -182,9 +182,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   \Illuminate\Database\Eloquent\Model $model
      * @param   string                              $relation
      *
-     * @return  \Illuminate\Database\Eloquent\Collection
+     * @return  mixed
      */
-    public function getRelation($model, string $relation) : Collection
+    public function getRelation($model, string $relation)
     {
         return $model->$relation;
     }

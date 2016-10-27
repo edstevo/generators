@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace App\Contracts\Dao;
+namespace EdStevo\Generators\Dao;
 
 use App\Dao\Eloquent\CriteriaBase;
 
