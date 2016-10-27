@@ -301,11 +301,11 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
      *
-     * @param   array
+     * @param   null
      */
-    public function attach($model, string $relationship, $relation) : array
+    public function attach($model, string $relationship, $relation, array $pivot_data = [])
     {
-        $result         = $model->$relationship()->attach($relation->id);
+        $result         = $model->$relationship()->attach($relation->id, $pivot_data);
 
         $modelName      = $this->getClassName(get_class($model));
         $relationName   = $this->getClassName(get_class($relation));
