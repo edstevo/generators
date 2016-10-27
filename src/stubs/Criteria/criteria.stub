@@ -7,7 +7,7 @@ class $CRITERIANAME extends CriteriaBase {
 
     /**
      * @param   $model
-     * @param   DaoBase $repository
+     * @param   DaoBaseContract $repository
      * @return  mixed
      */
     public function apply($model, DaoBaseContract $repository)
