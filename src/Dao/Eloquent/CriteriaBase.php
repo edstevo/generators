@@ -5,9 +5,9 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Dao;
+namespace EdStevo\Generators\Dao\Eloquent;
 
-use EdStevo\Generators\Contracts\Dao\DaoBase as DaoBaseContract;
+use EdStevo\Generators\Contracts\Dao\DaoBaseContract;
 
 abstract class CriteriaBase
 {

@@ -5,7 +5,7 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Dao;
+namespace EdStevo\Generators\Contracts\Dao;
 
 interface GeneratorContract
 {

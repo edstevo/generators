@@ -5,9 +5,9 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Dao;
+namespace EdStevo\Generators\Contracts\Dao;
 
-use App\Dao\Eloquent\CriteriaBase;
+use EdStevo\Generators\Dao\Eloquent\CriteriaBase;
 
 interface CriteriaContract
 {

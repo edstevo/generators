@@ -5,14 +5,13 @@
  *  You must get permission to use this work.
  */
 
-namespace EdStevo\Generators\Dao;
+namespace EdStevo\Generators\Dao\Eloquent;
 
-use App\Contracts\Dao\CriteriaContract;
-use App\Contracts\Dao\DaoBase as DaoBaseContract;
-use App\Contracts\Dao\GeneratorContract;
-use App\Dao\Eloquent\CriteriaBase;
-use App\Dao\Exceptions\ModelNotFoundException;
-use App\Dao\Exceptions\RepositoryException;
+use EdStevo\Generators\Dao\Exceptions\ModelNotFoundException;
+use EdStevo\Generators\Dao\Exceptions\RepositoryException;
+use EdStevo\Generators\Contracts\Dao\CriteriaContract;
+use EdStevo\Generators\Contracts\Dao\DaoBaseContract;
+use EdStevo\Generators\Contracts\Dao\GeneratorContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,7 +56,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model
      *
-     * @throws \App\Dao\Exceptions\RepositoryException
+     * @throws \EdStevo\Generators\Dao\Exceptions\\RepositoryException
      */
     protected function makeModel() : Model
     {
@@ -340,7 +339,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   array
      */
-    public function detach($model, $relationship, $relation) : array
+    public function detach($model, string $relationship, $relation) : array
     {
         $result         = $model->$relationship()->detach($relation->id);
 
@@ -366,7 +365,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     /**
      * Throw exception when model cannot be found
      *
-     * @throws  ModelNotFoundException
+     * @throws  \EdStevo\Generators\Dao\Exceptions\ModelNotFoundException
      */
     public function notFound()
     {
