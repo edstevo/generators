@@ -77,9 +77,11 @@ class $MODELNAMEController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Destroy$MODELNAMERequest $id)
+    public function destroy(Destroy$MODELNAMERequest $request, $id)
     {
-        $$MODELVARIABLE       = $this->$MODELVARIABLE->find($id);
-        return response()->make($this->$MODELVARIABLE->destroy($$MODELVARIABLE));
+        $$MODELVARIABLE     = $this->$MODELVARIABLE->findOrFail($id);
+        $result             = $this->$MODELVARIABLE->destroy($$MODELVARIABLE);
+
+        return response()->make(['result' => $result]);
     }
 }
