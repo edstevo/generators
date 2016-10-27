@@ -1,7 +1,7 @@
 <?php namespace App\Dao\Criteria\Eloquent;
 
-use App\Dao\Eloquent\CriteriaBase;
-use App\Contracts\Dao\DaoBase;
+use EdStevo\Generators\Dao\Eloquent\CriteriaBase;
+use EdStevo\Generators\Dao\Eloquent\DaoBase;
 
 class $CRITERIANAME extends CriteriaBase {
 

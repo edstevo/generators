@@ -141,10 +141,10 @@ class GenerateDaoEvent extends GeneratorCommand
         {
             $construct  = $this->files->get($this->getDoubleVariableConstruct());
             $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedNameInput()), $construct);
-            $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedRelationOption()), $construct);
+            $construct  = str_replace('$VARIABLE_TWO', strtolower($this->getFormattedRelationOption()), $construct);
         } else {
             $construct  = $this->files->get($this->getSingleVariableConstruct());
-            $construct  = str_replace('$VARIABLE_ONE', strtolower($this->getFormattedNameInput()), $construct);
+            $construct  = str_replace('$VARIABLE', strtolower($this->getFormattedNameInput()), $construct);
         }
 
         $stub   = str_replace('$CONSTRUCTS', $construct, $stub);
