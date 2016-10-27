@@ -16,8 +16,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 		'EdStevo\Generators\Commands\GenerateDaoRepository',
 		'EdStevo\Generators\Commands\GenerateMigration',
 		'EdStevo\Generators\Commands\GenerateModel',
-		'EdStevo\Generators\Commands\GenerateRequest',
-		'EdStevo\Generators\Commands\InstallDaoSystem'
+		'EdStevo\Generators\Commands\GenerateRequest'
 	];
 
 	/**
