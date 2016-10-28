@@ -143,7 +143,7 @@ abstract class DaoModel extends Model
      *
      * @return \EdStevo\Generators\Dao\Eloquent\DaoBase
      */
-    private function getDaoRepository()
+    public function getDaoRepository()
     {
         return app()->make('App\Dao\\' . $this->getModelName());
     }
