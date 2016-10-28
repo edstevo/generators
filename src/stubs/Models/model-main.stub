@@ -3,8 +3,9 @@
 namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
+use EdStevo\Generators\Contracts\Models\DaoModelContract;
 
-class $CLASSNAME extends Model
+class $CLASSNAME extends Model implements DaoModelContract
 {
 
     /**
@@ -13,6 +14,20 @@ class $CLASSNAME extends Model
      * @var array
      */
     protected $fillable = ['*'];
+
+    /**
+     *  Accessors
+     */
+
+    /**
+     * Get the identifier for this model
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * The rules associated with the attributes for this model

@@ -215,6 +215,10 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         $data       = $this->cleanData($data, $model->$relation()->getRelated());
 
+        $foreignKey         = $model->$relation()->getForeignKey();
+        $foreignKey         = explode(".", $foreignKey)[1];
+        $data[$foreignKey]  = $model->getId();
+
         $result     = $model->$relation()->create($data);
 
         $modelName  = $this->getClassName(get_class($result));
