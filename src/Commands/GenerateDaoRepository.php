@@ -11,7 +11,7 @@ class GenerateDaoRepository extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'generate:dao-repository {name} {--relation=}';
+    protected $signature = 'generate:dao {name} {--relation=}';
 
     /**
      * The console command description.
