@@ -45,7 +45,7 @@ abstract class DaoModel extends Model
      *
      * @return bool
      */
-    public function daoDestory() : bool
+    public function daoDestroy() : bool
     {
         return $this->getDaoRepository()->destroy($this);
     }
