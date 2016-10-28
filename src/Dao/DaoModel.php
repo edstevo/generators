@@ -23,9 +23,12 @@ abstract class DaoModel extends Model
     /**
      * Get the field used as an identifier for this model
      *
-     * @return mixed
+     * @return string
      */
-    abstract function getIdField();
+    public function getIdField() : string
+    {
+        return 'id';
+    }
 
     /**
      * Expressive way to use the destroy method via dao repository

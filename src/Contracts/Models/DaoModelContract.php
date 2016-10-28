@@ -17,4 +17,11 @@ interface DaoModelContract
      * @return mixed
      */
     public function getId();
+
+    /**
+     * Get the field used as an identifier for this model
+     *
+     * @return string
+     */
+    public function getIdField() : string;
 }
