@@ -342,9 +342,9 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
      *
-     * @param   array
+     * @param   bool
      */
-    public function detach($model, string $relationship, $relation) : array
+    public function detach($model, string $relationship, $relation) : bool
     {
         $result         = $model->$relationship()->detach($relation->id);
 

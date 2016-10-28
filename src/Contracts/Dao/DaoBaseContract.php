@@ -160,9 +160,9 @@ interface DaoBaseContract
      * @param   string                              $relationship
      * @param   \Illuminate\Database\Eloquent\Model $relation
      *
-     * @param   array
+     * @param   bool
      */
-    public function detach($model, string $relationship, $relation);
+    public function detach($model, string $relationship, $relation) : bool;
 
     /**
      * Get the validation rules associated with a model
