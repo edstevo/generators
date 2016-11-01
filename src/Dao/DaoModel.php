@@ -125,7 +125,7 @@ abstract class DaoModel extends Model
      */
     public function detach(string $relationship, $relation) : bool
     {
-        return $this->getDaoRepository()->sync($this, $relationship, $relation);
+        return $this->getDaoRepository()->detach($this, $relationship, $relation);
     }
 
     /**
