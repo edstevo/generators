@@ -148,6 +148,20 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     }
 
     /**
+     * Retrieve multiple entries of the resource from the DB where it matches an attribute
+     *
+     * @param  array  $ids
+     * @param  string  $attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function whereIn(array $ids, string $attribute = 'id')
+    {
+        $this->applyCriteria();
+        return $this->model->whereIn($attribute, $ids)->get();
+    }
+
+    /**
      * Update the specified resource in the DB.
      *
      * @param array  $data

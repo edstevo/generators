@@ -65,6 +65,15 @@ interface DaoBaseContract
     public function where(array $data);
 
     /**
+     * Retrieve multiple entries of the resource from the DB where it matches an attribute
+     *
+     * @param  array  $data
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function whereIn(array $ids, string $attribute = 'id');
+
+    /**
      * Update the specified resource in the DB.
      *
      * @param   array   $data
