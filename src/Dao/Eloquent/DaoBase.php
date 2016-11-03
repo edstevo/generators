@@ -225,7 +225,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, string $relation, array $data) : Model
+    public function storeRelation($model, string $relation, array $data = []) : Model
     {
         $data       = $this->cleanData($data, $model->$relation()->getRelated());
 
