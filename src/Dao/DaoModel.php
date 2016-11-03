@@ -83,7 +83,7 @@ abstract class DaoModel extends Model
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function storeRelationship(string $relation, array $data) : Model
+    public function storeRelationship(string $relation, array $data = []) : Model
     {
         return $this->getDaoRepository()->storeRelation($this, $relation, $data);
     }
