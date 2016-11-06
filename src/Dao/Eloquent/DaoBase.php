@@ -235,10 +235,11 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
 
         $result     = $model->$relation()->create($data);
 
+        $parentName = $this->getClassName(get_class($model));
         $modelName  = $this->getClassName(get_class($result));
-        $eventName  = $this->getEventNamespace($modelName, $modelName, "Created");
+        $eventName  = $this->getEventNamespace($parentName, $modelName, "Created");
 
-        event(new $eventName($result));
+        event(new $eventName($model, $result));
 
         return $result;
     }
