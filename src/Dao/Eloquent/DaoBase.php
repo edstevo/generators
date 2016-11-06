@@ -571,10 +571,6 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
         $data               = collect($data);
 
         $data               = $data->only($allowed_fields);
-        $data               = $data->filter(function($item, $key) {
-            if ($item)
-                return $item;
-        });
 
         return $data->toArray();
     }
