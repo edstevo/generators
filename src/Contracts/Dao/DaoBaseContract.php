@@ -64,7 +64,7 @@ interface DaoBaseContract
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data) : Model;
+    public function findWhere(array $data);
 
     /**
      * Retrieve multiple entries of the resource from the DB where it matches certain criteria

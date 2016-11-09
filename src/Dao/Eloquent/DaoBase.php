@@ -143,7 +143,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data) : Model
+    public function findWhere(array $data)
     {
         return $this->model->where($data)->first();
     }
