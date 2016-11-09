@@ -6,6 +6,8 @@
  */
 namespace EdStevo\Generators\Contracts\Dao;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface DaoBaseContract
 {
 
@@ -26,13 +28,22 @@ interface DaoBaseContract
     public function store(array $data);
 
     /**
+     * Find a current instance or create a new one
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function firstOrCreate(array $data) : Model;
+
+    /**
      * Retrieve an entry of the resource from the DB by its ID
      *
      * @param  int $id
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function find($id);
+    public function find($id) : Model;
 
     /**
      * Retrieve an entry of the resource from the DB
@@ -44,7 +55,7 @@ interface DaoBaseContract
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException;
      */
-    public function findOrFail($id);
+    public function findOrFail($id) : Model;
 
     /**
      * Retrieve an entry of the resource from the DB where it matches certain criteria
@@ -53,7 +64,7 @@ interface DaoBaseContract
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data);
+    public function findWhere(array $data) : Model;
 
     /**
      * Retrieve multiple entries of the resource from the DB where it matches certain criteria
@@ -76,11 +87,11 @@ interface DaoBaseContract
     /**
      * Update the specified resource in the DB.
      *
-     * @param   array   $data
-     * @param   int     $id
-     * @param   string  $attribute
+     * @param array  $data
+     * @param int    $id
+     * @param string $attribute
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return bool
      */
     public function update(array $data, $id, $attribute = "id");
 

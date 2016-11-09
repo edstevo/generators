@@ -94,6 +94,20 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     }
 
     /**
+     * Find a current instance or create a new one
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function firstOrCreate(array $data) : Model
+    {
+        $data       = $this->cleanData($data);
+
+        return $this->model->firstOrCreate($data);
+    }
+
+    /**
      * Retrieve an entry of the resource from the DB by its ID
      *
      * @param  int  $id
@@ -129,7 +143,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function findWhere(array $data)
+    public function findWhere(array $data) : Model
     {
         return $this->model->where($data)->first();
     }
