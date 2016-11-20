@@ -7,6 +7,7 @@
 
 namespace EdStevo\Generators\Dao\Eloquent;
 
+use EdStevo\Generators\Dao\DaoModel;
 use EdStevo\Generators\Dao\Exceptions\ModelNotFoundException;
 use EdStevo\Generators\Dao\Exceptions\RepositoryException;
 use EdStevo\Generators\Contracts\Dao\CriteriaContract;
@@ -325,6 +326,28 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     private function updateRelationMorphTo($model, string $relation, array $data, $id)
     {
 //        TODO: Finish
+    }
+
+    /**
+     * Destroy a relation and fire an event attached with this model
+     *
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     *
+     * @return bool|null
+     */
+    public function destroyRelation(DaoModel $model, string $relationship, DaoModel $relation)
+    {
+        $result         = $relation->delete();
+
+        $modelName      = $this->getClassName(get_class($model));
+        $relationName   = $this->getClassName(get_class($relation));
+        $eventName      = $this->getEventNamespace($modelName, $relationName, "Destroyed");
+
+        event(new $eventName($model, $relation));
+
+        return $result;
     }
 
     /**

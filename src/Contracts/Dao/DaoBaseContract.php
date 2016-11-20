@@ -6,6 +6,7 @@
  */
 namespace EdStevo\Generators\Contracts\Dao;
 
+use EdStevo\Generators\Dao\DaoModel;
 use Illuminate\Database\Eloquent\Model;
 
 interface DaoBaseContract
@@ -148,6 +149,17 @@ interface DaoBaseContract
      * @return mixed|void
      */
     public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id");
+
+    /**
+     * Destroy a relation and fire an event attached with this model
+     *
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     *
+     * @return bool|null
+     */
+    public function destroyRelation(DaoModel $model, string $relationship, DaoModel $relation);
 
     /**
      * Associate a model with a relation via a pivot

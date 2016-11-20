@@ -89,6 +89,19 @@ abstract class DaoModel extends Model
     }
 
     /**
+     * Expressive way to use the destroy relation method with this model via the dao repository
+     *
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     *
+     * @return bool
+     */
+    public function destroyRelationship(string $relationship, DaoModel $relation) : bool
+    {
+        return $this->getDaoRepository()->destroyRelation($this, $relationship, $relation);
+    }
+
+    /**
      * Expressive way to use the attach method with this model via the dao repository
      *
      * @param string                              $relation
