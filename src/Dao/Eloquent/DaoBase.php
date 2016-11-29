@@ -639,7 +639,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         if ($relation)
         {
-            return $this->fireRelationalEvent($eventType, $model, $relation);
+            return $this->fireRelationalEvent($model, $relation, $eventType);
         }
 
         return $this->fireSelfEvent($model, $eventType);
