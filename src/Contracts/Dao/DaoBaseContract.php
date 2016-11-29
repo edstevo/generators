@@ -92,9 +92,9 @@ interface DaoBaseContract
      * @param int    $id
      * @param string $attribute
      *
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function update(array $data, $id, $attribute = "id");
+    public function update(array $data, $id, $attribute = "id") : Model;
 
     /**
      * Remove an entry for the specified resource from the DB.

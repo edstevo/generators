@@ -194,9 +194,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param int    $id
      * @param string $attribute
      *
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function update(array $data, $id, $attribute = "id") : bool
+    public function update(array $data, $id, $attribute = "id") : Model
     {
         $data       = $this->cleanData($data);
 
