@@ -89,6 +89,19 @@ abstract class DaoModel extends Model
     }
 
     /**
+     * Expressive way to use the update relation method with this model via the dao repository
+     *
+     * @param string $relation
+     * @param array  $data
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function updateRelationship(string $relation, array $data = [], $id, $attribute = 'id') : Model
+    {
+        return $this->getDaoRepository()->updateRelation($this, $relation, $data, $id, $attribute);
+    }
+
+    /**
      * Expressive way to use the destroy relation method with this model via the dao repository
      *
      * @param string                           $relationship

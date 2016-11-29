@@ -303,7 +303,11 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
             $this->updateRelationMorphTo($model, $relation, $data, $id);
         }
 
-        return $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
+        $updatedRelation    = $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
+
+        $this->fireModelEvent("Updated", $model, $updatedRelation);
+
+        return $updatedRelation;
     }
 
     /**
