@@ -89,9 +89,13 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function store(array $data) : Model
     {
-        $data       = $this->cleanData($data);
+        $data   = $this->cleanData($data);
 
-        return $this->model->create($data);
+        $model  = $this->model->create($data);
+
+        $this->fireModelEvent("Created", $model);
+
+        return $model;
     }
 
     /**
@@ -189,7 +193,13 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         $data       = $this->cleanData($data);
 
-        return $this->model->where($attribute, '=', $id)->update($data);
+        $this->model->where($attribute, '=', $id)->update($data);
+
+        $model      = $this->find($id);
+
+        $this->fireModelEvent("Updated", $model);
+
+        return $model;
     }
 
     /**
@@ -201,7 +211,14 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     public function destroy($model) : bool
     {
-        return $model->delete();
+        $result = $model->delete();
+
+        if ($result)
+        {
+            $this->fireModelEvent("Destroyed", $model);
+        }
+
+        return $result;
     }
 
     /**
@@ -231,16 +248,17 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
         return $model->$relation()->where($constraints)->get();
     }
 
+
     /**
      * Put a new resource in storage that is related to another resource
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   array                               $data
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relation
+     * @param array                            $data
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function storeRelation($model, string $relation, array $data = []) : Model
+    public function storeRelation(DaoModel $model, string $relation, array $data = []) : Model
     {
         $data       = $this->cleanData($data, $model->$relation()->getRelated());
 
@@ -250,11 +268,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
 
         $result     = $model->$relation()->create($data);
 
-        $parentName = $this->getClassName(get_class($model));
-        $modelName  = $this->getClassName(get_class($result));
-        $eventName  = $this->getEventNamespace($parentName, $modelName, "Created");
-
-        event(new $eventName($model, $result));
+        $this->fireModelEvent("Created", $model, $result);
 
         return $result;
     }
@@ -341,11 +355,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         $result         = $relation->delete();
 
-        $modelName      = $this->getClassName(get_class($model));
-        $relationName   = $this->getClassName(get_class($relation));
-        $eventName      = $this->getEventNamespace($modelName, $relationName, "Destroyed");
-
-        event(new $eventName($model, $relation));
+        $this->fireModelEvent("Destroyed", $model, $relation);
 
         return $result;
     }
@@ -363,11 +373,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         $result         = $model->$relationship()->attach($relation->id, $pivot_data);
 
-        $modelName      = $this->getClassName(get_class($model));
-        $relationName   = $this->getClassName(get_class($relation));
-        $eventName      = $this->getEventNamespace($modelName, $relationName, "Attached");
-
-        event(new $eventName($model, $relation));
+        $this->fireModelEvent("Attached", $model, $relation);
 
         return $result;
     }
@@ -400,11 +406,7 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     {
         $result         = $model->$relationship()->detach($relation->id);
 
-        $modelName      = $this->getClassName(get_class($model));
-        $relationName   = $this->getClassName(get_class($relation));
-        $eventName      = $this->getEventNamespace($modelName, $relationName, "Detached");
-
-        event(new $eventName($model, $relation));
+        $this->fireModelEvent("Detached", $model, $relation);
 
         return $result;
     }
@@ -549,9 +551,23 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      *
      * @return string
      */
-    private function getEventNamespace(string $parentModel, string $relationModel, string $event) : string
+    private function getEventNamespace(string $eventType, string $model, string $relation = null) : string
     {
-        return $this->getEventsNamespace() . $parentModel . "\\" . $relationModel . "\\" . $relationModel . $event;
+        $eventString    = $this->getEventsNamespace() . $model;
+
+        if ($relation)
+        {
+            $eventString    = $eventString . "\\" . $relation . "\\" . $relation;
+        }
+
+        if (!$relation)
+        {
+            $eventString    = $eventString . "\\" . $model . "\\" . $model;
+        }
+
+        $eventString    = $eventString . $eventType;
+
+        return $eventString;
     }
 
     /**
@@ -610,5 +626,62 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
         $data               = $data->only($allowed_fields);
 
         return $data->toArray();
+    }
+
+    /**
+     * Fire a model event
+     *
+     * @param string                                   $eventType
+     * @param \Illuminate\Database\Eloquent\Model      $model
+     * @param \Illuminate\Database\Eloquent\Model|NULL $relation
+     */
+    private function fireModelEvent(string $eventType, Model $model, Model $relation = null)
+    {
+        if ($relation)
+        {
+            return $this->fireRelationalEvent($eventType, $model, $relation);
+        }
+
+        return $this->fireSelfEvent($model, $eventType);
+    }
+
+    /**
+     * Fire a model event
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string                              $eventType
+     */
+    private function fireSelfEvent(Model $model, string $eventType)
+    {
+        $modelName  = $this->getClassName(get_class($this->model));
+        $eventName  = $this->getEventNamespace($eventType, $modelName);
+
+        if (!class_exists($eventName))
+        {
+            throw new RepositoryException("Event {$eventName} Does Not Exist");
+        }
+
+        event(new $eventName($model));
+    }
+
+    /**
+     * Fire a relational model event
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param \Illuminate\Database\Eloquent\Model $relation
+     * @param string                              $eventType
+     */
+    private function fireRelationalEvent(Model $model, Model $relation, string $eventType)
+    {
+        $modelName      = $this->getClassName(get_class($this->model));
+        $relationName   = $this->getClassName(get_class($relation));
+        $eventName      = $this->getEventNamespace($eventType, $modelName, $relationName);
+
+        if (!class_exists($eventName))
+        {
+            throw new RepositoryException("Event {$eventName} Does Not Exist");
+        }
+
+        event(new $eventName($model, $relation));
     }
 }

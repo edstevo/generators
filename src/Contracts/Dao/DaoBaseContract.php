@@ -135,7 +135,7 @@ interface DaoBaseContract
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
      */
-    public function storeRelation($model, string $relation, array $data);
+    public function storeRelation(DaoModel $model, string $relation, array $data = []) : Model;
 
     /**
      * Update a relation of the model
