@@ -7,6 +7,7 @@
 
 namespace EdStevo\Generators\Dao\Eloquent;
 
+use EdStevo\Generators\Contracts\Dao\EventsContract;
 use EdStevo\Generators\Dao\DaoModel;
 use EdStevo\Generators\Dao\Exceptions\ModelNotFoundException;
 use EdStevo\Generators\Dao\Exceptions\RepositoryException;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 
-abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorContract
+abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContract, GeneratorContract
 {
 
     /**
@@ -37,9 +38,15 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
      */
     protected $skipCriteria = false;
 
+    /**
+     * @var bool
+     */
+    protected $skipEvents   = false;
+
     public function __construct(Collection $collection)
     {
         $this->criteria         = $collection;
+        $this->resetEvents();
         $this->resetScope();
         $this->makeModel();
     }
@@ -433,6 +440,30 @@ abstract class DaoBase implements DaoBaseContract, CriteriaContract, GeneratorCo
     public function notFound()
     {
         throw (new ModelNotFoundException)->setModel(get_class($this->model));
+    }
+
+    /**
+     * Reset the repository skip events status
+     *
+     * @return $this
+     */
+    public function resetEvents()
+    {
+        $this->skipEvents(false);
+        return $this;
+    }
+
+    /**
+     * Set the repository to skip the events
+     *
+     * @param bool $status
+     *
+     * @return $this
+     */
+    public function skipEvents(bool $status = true)
+    {
+        $this->skipEvents   = $status;
+        return $this;
     }
 
     /**
