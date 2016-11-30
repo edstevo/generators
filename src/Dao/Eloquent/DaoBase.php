@@ -717,6 +717,6 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
             throw new RepositoryException("Event {$eventName} Does Not Exist");
         }
 
-        event(new $eventName($model, $relation));
+        broadcast(new $eventName($model, $relation))->toOthers();
     }
 }
