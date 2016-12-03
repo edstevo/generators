@@ -33,9 +33,9 @@ abstract class DaoModel extends Model
     /**
      * Expressive way to use the destroy method via dao repository
      *
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function daoUpdate(array $data = []) : bool
+    public function daoUpdate(array $data = []) : Model
     {
         return $this->getDaoRepository()->update($data, $this->getId(), $this->getIdField());
     }
