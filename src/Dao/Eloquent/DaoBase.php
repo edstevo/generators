@@ -124,9 +124,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param  int  $id
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \Illuminate\Database\Eloquent\Model|null;
      */
-    public function find($id) : Model
+    public function find($id)
     {
         $this->applyCriteria();
         return $this->model->find($id);

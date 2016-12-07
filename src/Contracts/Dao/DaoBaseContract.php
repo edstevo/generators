@@ -44,7 +44,7 @@ interface DaoBaseContract
      *
      * @return \Illuminate\Database\Eloquent\Model;
      */
-    public function find($id) : Model;
+    public function find($id);
 
     /**
      * Retrieve an entry of the resource from the DB
@@ -63,7 +63,7 @@ interface DaoBaseContract
      *
      * @param  array $data
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \Illuminate\Database\Eloquent\Model|null;
      */
     public function findWhere(array $data);
 
