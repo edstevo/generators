@@ -39,6 +39,13 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     protected $skipCriteria = false;
 
     /**
+     * Elect whether to have events for this dao
+     *
+     * @var bool
+     */
+    protected $events   = true;
+
+    /**
      * @var bool
      */
     protected $skipEvents   = false;
@@ -669,15 +676,20 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param string                                   $eventType
      * @param \Illuminate\Database\Eloquent\Model      $model
      * @param \Illuminate\Database\Eloquent\Model|NULL $relation
+     *
+     * @return void;
      */
     private function fireModelEvent(string $eventType, Model $model, Model $relation = null)
     {
+        if (!$this->events)
+            return;
+
         if ($relation)
         {
-            return $this->fireRelationalEvent($model, $relation, $eventType);
+            $this->fireRelationalEvent($model, $relation, $eventType);
         }
 
-        return $this->fireSelfEvent($model, $eventType);
+        $this->fireSelfEvent($model, $eventType);
     }
 
     /**
