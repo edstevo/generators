@@ -687,9 +687,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
         if ($relation)
         {
             $this->fireRelationalEvent($model, $relation, $eventType);
+        } else {
+            $this->fireSelfEvent($model, $eventType);
         }
-
-        $this->fireSelfEvent($model, $eventType);
     }
 
     /**
