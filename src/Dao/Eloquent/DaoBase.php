@@ -412,6 +412,25 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     }
 
     /**
+     * Update a pivot table across a many to many relationship
+     *
+     * @param        $model
+     * @param string $relationship
+     * @param        $relation
+     * @param array  $pivot_data
+     *
+     * @return mixed
+     */
+    public function updatePivot(DaoModel $model, string $relationship, DaoModel $relation, array $pivot_data = [])
+    {
+        $result         = $model->$relationship()->updateExistingPivot($relation->getId(), $pivot_data);
+
+        $this->fireModelEvent("Updated", $model, $relation);
+
+        return $result;
+    }
+
+    /**
      * Dissociate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model

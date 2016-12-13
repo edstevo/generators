@@ -186,6 +186,18 @@ interface DaoBaseContract
     public function sync($model, string $relationship, $relation_id, bool $detaching = true);
 
     /**
+     * Update a pivot table across a many to many relationship
+     *
+     * @param        $model
+     * @param string $relationship
+     * @param        $relation
+     * @param array  $pivot_data
+     *
+     * @return mixed
+     */
+    public function updatePivot(DaoModel $model, string $relationship, DaoModel $relation, array $pivot_data = []);
+
+    /**
      * Dissociate a model with a relation via a pivot
      *
      * @param   \Illuminate\Database\Eloquent\Model $model
