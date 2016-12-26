@@ -2,10 +2,9 @@
 
 namespace DummyNamespace;
 
-use Illuminate\Database\Eloquent\Model;
-use EdStevo\Generators\Contracts\Models\DaoModelContract;
+use EdStevo\Generators\Dao\DaoModel;
 
-class $CLASSNAME extends Model implements DaoModelContract
+class $CLASSNAME extends DaoModel
 {
 
     /**
