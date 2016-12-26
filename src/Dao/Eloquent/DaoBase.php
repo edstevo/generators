@@ -50,6 +50,13 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      */
     protected $skipEvents   = false;
 
+    /**
+     * Specify relationships which should not broadcast events
+     *
+     * @var array
+     */
+    protected $skipEventsForRelationships = [];
+
     public function __construct(Collection $collection)
     {
         $this->criteria         = $collection;
@@ -282,7 +289,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 
         $result     = $model->$relation()->create($data);
 
-        $this->fireModelEvent("Created", $model, $result);
+        if (!in_array($relation, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Created", $model, $result);
+        }
 
         return $result;
     }
@@ -319,7 +329,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 
         $updatedRelation    = $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
 
-        $this->fireModelEvent("Updated", $model, $updatedRelation);
+        if (!in_array($relation, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Updated", $model, $updatedRelation);
+        }
 
         return $updatedRelation;
     }
@@ -373,7 +386,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     {
         $result         = $relation->delete();
 
-        $this->fireModelEvent("Destroyed", $model, $relation);
+        if (!in_array($relationship, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Destroyed", $model, $relation);
+        }
 
         return $result;
     }
@@ -391,7 +407,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     {
         $result         = $model->$relationship()->attach($relation->id, $pivot_data);
 
-        $this->fireModelEvent("Attached", $model, $relation);
+        if (!in_array($relationship, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Attached", $model, $relation);
+        }
 
         return $result;
     }
@@ -425,7 +444,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     {
         $result         = $model->$relationship()->updateExistingPivot($relation->getId(), $pivot_data);
 
-        $this->fireModelEvent("Updated", $model, $relation);
+        if (!in_array($relationship, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Updated", $model, $relation);
+        }
 
         return $result;
     }
@@ -443,7 +465,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     {
         $result         = $model->$relationship()->detach($relation->id);
 
-        $this->fireModelEvent("Detached", $model, $relation);
+        if (!in_array($relationship, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Detached", $model, $relation);
+        }
 
         return $result;
     }
@@ -749,5 +774,14 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
         }
 
         broadcast(new $eventName($model, $relation))->toOthers();
+    }
+
+    /**
+     * Inherit function
+     * Clean up class
+     */
+    public function __destruct()
+    {
+        $this->skipEvents(false);
     }
 }

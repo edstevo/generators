@@ -8,7 +8,24 @@ use App\Models\$MODELNAME as $MODELNAMEModel;
 class $CLASSNAME extends DaoBase
 {
 
-    protected function model()
+    /**
+     * Elect whether to have events for this dao
+     *
+     * @var bool
+     */
+    protected $events   = true;
+
+    /**
+     * Specify relationships which should not broadcast events
+     *
+     * @var array
+     */
+    protected $skipEventsForRelationships = [];
+
+    /**
+     * @return \EdStevo\Generators\Dao\DaoModel
+     */
+    protected function model() : DaoModel
     {
         return $MODELNAMEModel::class;
     }
