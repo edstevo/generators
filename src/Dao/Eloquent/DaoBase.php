@@ -17,6 +17,7 @@ use EdStevo\Generators\Contracts\Dao\GeneratorContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 
@@ -322,9 +323,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
             $this->updateRelationBelongsToMany($model, $relation, $data, $id, $attribute);
         }
 
-        if ($model->$relation() instanceof MorphTo)
+        if ($model->$relation() instanceof MorphMany)
         {
-            $this->updateRelationMorphTo($model, $relation, $data, $id);
+            $this->updateRelationMorphMany($model, $relation, $data, $id, $attribute);
         }
 
         $updatedRelation    = $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
@@ -368,9 +369,19 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
         return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
 
-    private function updateRelationMorphTo($model, string $relation, array $data, $id)
+    /**
+     * Update the related model via a polymorphic relationship
+     *
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param string                                $relation
+     * @param array                                 $data
+     * @param int                                   $id
+     *
+     * @return mixed
+     */
+    private function updateRelationMorphMany($model, string $relation, array $data, $id, $attribute = 'id')
     {
-//        TODO: Finish
+        return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
 
     /**

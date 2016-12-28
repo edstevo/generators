@@ -29,6 +29,6 @@ $CONSTRUCTS
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('$MODELVARIABLE-' . $this->$MODELVARIABLE->id);
+        return new PrivateChannel('$MODELVARIABLE.' . $this->$MODELVARIABLE->getId());
     }
 }
