@@ -23,9 +23,11 @@ class $CLASSNAME extends DaoBase
     protected $skipEventsForRelationships = [];
 
     /**
-     * @return \EdStevo\Generators\Dao\DaoModel
+     * Declare the model associated with this Dao
+     *
+     * @return string
      */
-    protected function model() : DaoModel
+    protected function model() : string
     {
         return $MODELNAMEModel::class;
     }
