@@ -1,6 +1,6 @@
 <?php
 
-$factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\$CLASSNAME::class, function (Faker\Generator $faker) {
 
     return [
         $FIELDS
