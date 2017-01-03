@@ -189,7 +189,7 @@ class GenerateModel extends GeneratorCommand
             if(in_array($field, $unwanted_fields))
                 continue;
 
-            $field_string   .= '"' . $field . '" => ""' . PHP_EOL . "\t\t";
+            $field_string   .= '"' . $field . '" => "",' . PHP_EOL . "\t\t";
         }
 
         $stub   = str_replace('$FIELDS', $field_string, $stub);
