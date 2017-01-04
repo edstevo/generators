@@ -14,7 +14,7 @@ abstract class DaoModel extends Model
 {
 
     /**
-     * Get the appends data for this model
+     * Get the appends data for this
      *
      * @return array
      */
