@@ -14,6 +14,16 @@ abstract class DaoModel extends Model
 {
 
     /**
+     * Get the appends data
+     *
+     * @return array
+     */
+    public function getAppends()
+    {
+        return $this->appends;
+    }
+
+    /**
      * Get the identifier for this model
      *
      * @return mixed
