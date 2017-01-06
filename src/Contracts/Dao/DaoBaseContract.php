@@ -8,6 +8,7 @@ namespace EdStevo\Generators\Contracts\Dao;
 
 use EdStevo\Generators\Dao\DaoModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 interface DaoBaseContract
 {
@@ -24,7 +25,7 @@ interface DaoBaseContract
      *
      * @param   array $data
      *
-     * @return  \Illuminate\Database\Eloquent\Model;
+     * @return  \EdStevo\Generators\Dao\DaoModel;
      */
     public function store(array $data);
 
@@ -33,16 +34,16 @@ interface DaoBaseContract
      *
      * @param array $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function firstOrCreate(array $data) : Model;
+    public function firstOrCreate(array $data) : DaoModel;
 
     /**
      * Retrieve an entry of the resource from the DB by its ID
      *
      * @param  int $id
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \EdStevo\Generators\Dao\DaoModel;
      */
     public function find($id);
 
@@ -50,20 +51,20 @@ interface DaoBaseContract
      * Retrieve an entry of the resource from the DB
      * If the resource cannot be found, throw ModelNotFoundException
      *
-     * @param  int $id
+     * @param  int  $id
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \EdStevo\Generators\Dao\DaoModel;
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException;
+     * @throws \EdStevo\Generators\Dao\DaoModelNotFoundException;
      */
-    public function findOrFail($id) : Model;
+    public function findOrFail($id) : DaoModel;
 
     /**
      * Retrieve an entry of the resource from the DB where it matches certain criteria
      *
      * @param  array $data
      *
-     * @return \Illuminate\Database\Eloquent\Model|null;
+     * @return \EdStevo\Generators\Dao\DaoModel|null;
      */
     public function findWhere(array $data);
 
@@ -79,11 +80,12 @@ interface DaoBaseContract
     /**
      * Retrieve multiple entries of the resource from the DB where it matches an attribute
      *
-     * @param  array  $data
+     * @param  array  $ids
+     * @param  string  $attribute
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function whereIn(array $ids, string $attribute = 'id');
+    public function whereIn(array $ids, string $attribute = null);
 
     /**
      * Update the specified resource in the DB.
@@ -92,63 +94,63 @@ interface DaoBaseContract
      * @param int    $id
      * @param string $attribute
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function update(array $data, $id, $attribute = "id") : Model;
+    public function update(array $data, $id, string $attribute = null) : DaoModel;
 
     /**
      * Remove an entry for the specified resource from the DB.
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel  $model
      *
      * @return  boolean
      */
-    public function destroy($model);
+    public function destroy(DaoModel $model) : bool;
 
     /**
      * Retrieve all entries of a resource related to this model from the DB
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relationship
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
+     * @param   string                              $relation
      *
-     * @return  \Illuminate\Database\Eloquent\Collection
+     * @return  mixed
      */
-    public function getRelation($model, string $relation);
+    public function getRelation(DaoModel $model, string $relation);
 
     /**
      * Retrieve all entries of a resource related to this model from the DB with constraints
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relation
      * @param   array                               $constraints
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, string $relation, array $constraints = []);
+    public function getRelationWhere(DaoModel $model, string $relation, array $constraints = []) : Collection;
 
     /**
      * Put a new resource in storage that is related to another resource
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
-     * @param   string                              $relation
-     * @param   array                               $data
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relation
+     * @param array                            $data
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function storeRelation(DaoModel $model, string $relation, array $data = []) : Model;
+    public function storeRelation(DaoModel $model, string $relation, array $data = []) : DaoModel;
 
     /**
      * Update a relation of the model
      *
-     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param \EdStevo\Generators\Dao\DaoModel   $model
      * @param string                                $relation
      * @param array                                 $data
      * @param null                                  $id
      * @param string                                $attribute
      *
-     * @return mixed|void
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id");
+    public function updateRelation(DaoModel $model, string $relation, array $data, $id = null, string $attribute = null) : DaoModel;
 
     /**
      * Destroy a relation and fire an event attached with this model
@@ -164,26 +166,26 @@ interface DaoBaseContract
     /**
      * Associate a model with a relation via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel    $model
      * @param   string                              $relationship
-     * @param   \Illuminate\Database\Eloquent\Model $relation
+     * @param   \EdStevo\Generators\Dao\DaoModel    $relation
      * @param   array                               $pivot_data
      *
-     * @returns   void
+     * @param   null
      */
-    public function attach($model, string $relationship, $relation, array $pivot_data = []);
+    public function attach(DaoModel $model, string $relationship, DaoModel $relation, array $pivot_data = []);
 
     /**
      * Sync a model and its relations via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel    $model
      * @param   string                              $relation
      * @param   int/string                          $relation_id
      * @param   bool                                $detaching
      *
      * @param   array
      */
-    public function sync($model, string $relationship, $relation_id, bool $detaching = true);
+    public function sync(DaoModel $model, string $relationship, $relation_id, bool $detaching = true);
 
     /**
      * Update a pivot table across a many to many relationship
@@ -200,13 +202,13 @@ interface DaoBaseContract
     /**
      * Dissociate a model with a relation via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relationship
-     * @param   \Illuminate\Database\Eloquent\Model $relation
+     * @param   \EdStevo\Generators\Dao\DaoModel $relation
      *
      * @param   bool
      */
-    public function detach($model, string $relationship, $relation) : bool;
+    public function detach(DaoModel $model, string $relationship, DaoModel $relation) : bool;
 
     /**
      * Get the validation rules associated with a model
@@ -228,9 +230,9 @@ interface DaoBaseContract
      * @param $model
      * @param $relation
      *
-     * @return mixed
+     * @return string
      */
-    public function getRelationModel($model, $relation);
+    public function getRelationModel(DaoModel $model, DaoModel $relation) : string;
 
     /**
      * Get the Class Name from a namespace

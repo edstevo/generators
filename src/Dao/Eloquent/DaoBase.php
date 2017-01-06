@@ -25,7 +25,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 {
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var \EdStevo\Generators\Dao\DaoModel
      */
     protected $model;
 
@@ -77,15 +77,15 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Set the model for the repository
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      *
      * @throws \EdStevo\Generators\Dao\Exceptions\\RepositoryException
      */
-    protected function makeModel() : Model
+    protected function makeModel() : DaoModel
     {
         $model  = resolve($this->model());
 
-        if (!$model instanceof Model)
+        if (!$model instanceof DaoModel)
             throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
 
         return $this->model = $model;
@@ -107,9 +107,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param   array  $data
      *
-     * @return  \Illuminate\Database\Eloquent\Model;
+     * @return  \EdStevo\Generators\Dao\DaoModel;
      */
-    public function store(array $data) : Model
+    public function store(array $data) : DaoModel
     {
         $data   = $this->cleanData($data);
 
@@ -125,9 +125,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param array $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function firstOrCreate(array $data) : Model
+    public function firstOrCreate(array $data) : DaoModel
     {
         $data       = $this->cleanData($data);
 
@@ -139,7 +139,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param  int  $id
      *
-     * @return \Illuminate\Database\Eloquent\Model|null;
+     * @return \EdStevo\Generators\Dao\DaoModel|null;
      */
     public function find($id)
     {
@@ -153,11 +153,11 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param  int  $id
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \EdStevo\Generators\Dao\DaoModel;
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException;
+     * @throws \EdStevo\Generators\Dao\DaoModelNotFoundException;
      */
-    public function findOrFail($id) : Model
+    public function findOrFail($id) : DaoModel
     {
         $this->applyCriteria();
         return $this->model->findOrFail($id);
@@ -168,7 +168,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @param  array  $data
      *
-     * @return \Illuminate\Database\Eloquent\Model;
+     * @return \EdStevo\Generators\Dao\DaoModel;
      */
     public function findWhere(array $data)
     {
@@ -196,8 +196,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function whereIn(array $ids, string $attribute = 'id')
+    public function whereIn(array $ids, string $attribute = null)
     {
+        $attribute  = ($attribute) ?: $this->model->getIdField();
+
         $this->applyCriteria();
         return $this->model->whereIn($attribute, $ids)->get();
     }
@@ -209,11 +211,13 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param int    $id
      * @param string $attribute
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function update(array $data, $id, $attribute = "id") : Model
+    public function update(array $data, $id, string $attribute = null) : DaoModel
     {
         $data       = $this->cleanData($data);
+
+        $attribute  = ($attribute) ?: $this->model->getIdField();
 
         $this->model->where($attribute, '=', $id)->update($data);
 
@@ -227,11 +231,11 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Remove an entry for the specified resource from the DB.
      *
-     * @param   \Illuminate\Database\Eloquent\Model  $model
+     * @param   \EdStevo\Generators\Dao\DaoModel  $model
      *
      * @return  boolean
      */
-    public function destroy($model) : bool
+    public function destroy(DaoModel $model) : bool
     {
         $result = $model->delete();
 
@@ -246,12 +250,12 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Retrieve all entries of a resource related to this model from the DB
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relation
      *
      * @return  mixed
      */
-    public function getRelation($model, string $relation)
+    public function getRelation(DaoModel $model, string $relation)
     {
         return $model->$relation;
     }
@@ -259,13 +263,13 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Retrieve all entries of a resource related to this model from the DB with constraints
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relation
      * @param   array                               $constraints
      *
      * @return  \Illuminate\Database\Eloquent\Collection
      */
-    public function getRelationWhere($model, string $relation, array $constraints = []) : Collection
+    public function getRelationWhere(DaoModel $model, string $relation, array $constraints = []) : Collection
     {
         return $model->$relation()->where($constraints)->get();
     }
@@ -278,9 +282,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param string                           $relation
      * @param array                            $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function storeRelation(DaoModel $model, string $relation, array $data = []) : Model
+    public function storeRelation(DaoModel $model, string $relation, array $data = []) : DaoModel
     {
         $data       = $this->cleanData($data, $model->$relation()->getRelated());
 
@@ -301,17 +305,19 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Update a relation of the model
      *
-     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param \EdStevo\Generators\Dao\DaoModel   $model
      * @param string                                $relation
      * @param array                                 $data
      * @param null                                  $id
      * @param string                                $attribute
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function updateRelation($model, string $relation, array $data, $id = null, $attribute = "id") : Model
+    public function updateRelation(DaoModel $model, string $relation, array $data, $id = null, string $attribute = null) : DaoModel
     {
-        $data    = $this->cleanData($data, $model->$relation()->getRelated());
+        $data       = $this->cleanData($data, $model->$relation()->getRelated());
+
+        $attribute  = ($attribute) ?: $model->$relation()->getIdField();
 
         if ($model->$relation() instanceof HasMany)
         {
@@ -349,7 +355,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @return bool
      */
-    private function updateRelationHasMany($model, string $relation, array $data, $id, $attribute = 'id') : bool
+    private function updateRelationHasMany(DaoModel $model, string $relation, array $data, $id, string $attribute) : bool
     {
         return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
@@ -357,14 +363,14 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Update the related model via a many to many relationship
      *
-     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param \EdStevo\Generators\Dao\DaoModel   $model
      * @param string                                $relation
      * @param array                                 $data
      * @param int                                   $id
      *
      * @return mixed
      */
-    private function updateRelationBelongsToMany($model, string $relation, array $data, $id, $attribute = 'id') : bool
+    private function updateRelationBelongsToMany(DaoModel $model, string $relation, array $data, $id, string $attribute) : bool
     {
         return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
@@ -372,14 +378,14 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Update the related model via a polymorphic relationship
      *
-     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param \EdStevo\Generators\Dao\DaoModel   $model
      * @param string                                $relation
      * @param array                                 $data
      * @param int                                   $id
      *
      * @return mixed
      */
-    private function updateRelationMorphMany($model, string $relation, array $data, $id, $attribute = 'id')
+    private function updateRelationMorphMany(DaoModel $model, string $relation, array $data, $id, string $attribute)
     {
         return $model->$relation()->where($attribute, $id)->first()->update($data);
     }
@@ -408,13 +414,14 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Associate a model with a relation via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel    $model
      * @param   string                              $relationship
-     * @param   \Illuminate\Database\Eloquent\Model $relation
+     * @param   \EdStevo\Generators\Dao\DaoModel    $relation
+     * @param   array                               $pivot_data
      *
      * @param   null
      */
-    public function attach($model, string $relationship, $relation, array $pivot_data = [])
+    public function attach(DaoModel $model, string $relationship, DaoModel $relation, array $pivot_data = [])
     {
         $result         = $model->$relationship()->attach($relation->id, $pivot_data);
 
@@ -429,14 +436,14 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Sync a model and its relations via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relation
      * @param   int/string                          $relation_id
      * @param   bool                                $detaching
      *
      * @param   array
      */
-    public function sync($model, string $relationship, $relation_id, bool $detaching = true)
+    public function sync(DaoModel $model, string $relationship, $relation_id, bool $detaching = true)
     {
         return $model->$relationship()->sync($relation_id, $detaching);
     }
@@ -466,13 +473,13 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Dissociate a model with a relation via a pivot
      *
-     * @param   \Illuminate\Database\Eloquent\Model $model
+     * @param   \EdStevo\Generators\Dao\DaoModel $model
      * @param   string                              $relationship
-     * @param   \Illuminate\Database\Eloquent\Model $relation
+     * @param   \EdStevo\Generators\Dao\DaoModel $relation
      *
      * @param   bool
      */
-    public function detach($model, string $relationship, $relation) : bool
+    public function detach(DaoModel $model, string $relationship, DaoModel $relation) : bool
     {
         $result         = $model->$relationship()->detach($relation->id);
 
@@ -599,7 +606,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      *
      * @return string
      */
-    public function getRelationModel($model, $relation) : string
+    public function getRelationModel(DaoModel $model, DaoModel $relation) : string
     {
         $relatedModel   = $model->$relation()->getRelated();
         $className      = get_class($relatedModel);
@@ -673,9 +680,9 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param array $data
      * @param bool  $persist
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function generate(array $data = [], bool $persist = true) : Model
+    public function generate(array $data = [], bool $persist = true) : DaoModel
     {
         if ($persist)
         {
@@ -692,7 +699,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * @param array $data
      * @param bool  $persist
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
     public function generateMultiple(int $number = 2, array $data = [], bool $persist = true) : Collection
     {
@@ -708,11 +715,11 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * Clean a data set to only allow the correct data for this model
      *
      * @param array                               $data
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param \EdStevo\Generators\Dao\DaoModel $model
      *
      * @return array
      */
-    private function cleanData(array $data, Model $model = null) : array
+    private function cleanData(array $data, DaoModel $model = null) : array
     {
         if (is_null($model))
             $model          = $this->model;
@@ -729,12 +736,12 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      * Fire a model event
      *
      * @param string                                   $eventType
-     * @param \Illuminate\Database\Eloquent\Model      $model
-     * @param \Illuminate\Database\Eloquent\Model|NULL $relation
+     * @param \EdStevo\Generators\Dao\DaoModel      $model
+     * @param \EdStevo\Generators\Dao\DaoModel|NULL $relation
      *
      * @return void;
      */
-    private function fireModelEvent(string $eventType, Model $model, Model $relation = null)
+    private function fireModelEvent(string $eventType, DaoModel $model, DaoModel $relation = null)
     {
         if (!$this->events || $this->skipEvents)
             return;
@@ -750,10 +757,10 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Fire a model event
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param \EdStevo\Generators\Dao\DaoModel $model
      * @param string                              $eventType
      */
-    private function fireSelfEvent(Model $model, string $eventType)
+    private function fireSelfEvent(DaoModel $model, string $eventType)
     {
         $modelName  = $this->getClassName(get_class($this->model));
         $eventName  = $this->getEventNamespace($eventType, $modelName);
@@ -769,11 +776,11 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Fire a relational model event
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param \Illuminate\Database\Eloquent\Model $relation
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
      * @param string                              $eventType
      */
-    private function fireRelationalEvent(Model $model, Model $relation, string $eventType)
+    private function fireRelationalEvent(DaoModel $model, DaoModel $relation, string $eventType)
     {
         $modelName      = $this->getClassName(get_class($this->model));
         $relationName   = $this->getClassName(get_class($relation));
