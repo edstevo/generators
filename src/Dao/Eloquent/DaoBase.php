@@ -207,21 +207,24 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     /**
      * Update the specified resource in the DB.
      *
-     * @param array  $data
-     * @param int    $id
+     * @param \EdStevo\Generators\Dao\DaoModel  $model
+     * @param array     $data
      * @param string $attribute
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function update(array $data, $id, string $attribute = null) : DaoModel
+    public function update(DaoModel $model, array $data) : DaoModel
     {
         $data       = $this->cleanData($data);
 
-        $attribute  = ($attribute) ?: $this->model->getIdField();
+        foreach ($data as $key => $value)
+        {
+            $model->$key    = $value;
+        }
 
-        $this->model->where($attribute, '=', $id)->update($data);
+        $model->save();
 
-        $model      = $this->find($id);
+        $model->update($data);
 
         $this->fireModelEvent("Updated", $model);
 
@@ -276,65 +279,35 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 
 
     /**
-     * Put a new resource in storage that is related to another resource
+     * Update a relation of the model
      *
      * @param \EdStevo\Generators\Dao\DaoModel $model
-     * @param string                           $relation
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
      * @param array                            $data
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function storeRelation(DaoModel $model, string $relation, array $data = []) : DaoModel
+    public function updateRelation(DaoModel $model, string $relationship, DaoModel $relation, array $data) : DaoModel
     {
-        $data       = $this->cleanData($data, $model->$relation()->getRelated());
-
-        $foreignKey         = $model->$relation()->getForeignKey();
-        $foreignKey         = explode(".", $foreignKey)[1];
-        $data[$foreignKey]  = $model->getId();
-
-        $result     = $model->$relation()->create($data);
-
-        if (!in_array($relation, $this->skipEventsForRelationships))
-        {
-            $this->fireModelEvent("Created", $model, $result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Update a relation of the model
-     *
-     * @param \EdStevo\Generators\Dao\DaoModel   $model
-     * @param string                                $relation
-     * @param array                                 $data
-     * @param null                                  $id
-     * @param string                                $attribute
-     *
-     * @return \EdStevo\Generators\Dao\DaoModel
-     */
-    public function updateRelation(DaoModel $model, string $relation, array $data, $id = null, string $attribute = null) : DaoModel
-    {
-        $data       = $this->cleanData($data, $model->$relation()->getRelated());
-
-        $attribute  = ($attribute) ?: $model->$relation()->getIdField();
+        $data       = $this->cleanData($data, $relation);
 
         if ($model->$relation() instanceof HasMany)
         {
-            $this->updateRelationHasMany($model, $relation, $data, $id);
+            $this->updateRelationHasMany($model, $relationship, $relation, $data);
         }
 
         if ($model->$relation() instanceof BelongsToMany)
         {
-            $this->updateRelationBelongsToMany($model, $relation, $data, $id, $attribute);
+            $this->updateRelationBelongsToMany($model, $relationship, $relation, $data);
         }
 
         if ($model->$relation() instanceof MorphMany)
         {
-            $this->updateRelationMorphMany($model, $relation, $data, $id, $attribute);
+            $this->updateRelationMorphMany($model, $relationship, $relation, $data);
         }
 
-        $updatedRelation    = $this->getRelationWhere($model, $relation, [$attribute => $id])->first();
+        $updatedRelation    = $this->getRelationWhere($model, $relationship, [$relation->getIdField() => $relation->getId()])->first();
 
         if (!in_array($relation, $this->skipEventsForRelationships))
         {
@@ -345,49 +318,75 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     }
 
     /**
-     * Update the related model via a has many relationship
+     * Put a new resource in storage that is related to another resource
      *
-     * @param        $model
-     * @param string $relation
-     * @param array  $data
-     * @param        $id
-     * @param string $attribute
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param array                            $data
      *
-     * @return bool
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    private function updateRelationHasMany(DaoModel $model, string $relation, array $data, $id, string $attribute) : bool
+    public function storeRelation(DaoModel $model, string $relationship, array $data = []) : DaoModel
     {
-        return $model->$relation()->where($attribute, $id)->first()->update($data);
+        $data       = $this->cleanData($data, $model->$relationship()->getRelated());
+
+        $foreignKey         = $model->$relationship()->getForeignKey();
+        $foreignKey         = explode(".", $foreignKey)[1];
+        $data[$foreignKey]  = $model->getId();
+
+        $result     = $model->$relationship()->create($data);
+
+        if (!in_array($relationship, $this->skipEventsForRelationships))
+        {
+            $this->fireModelEvent("Created", $model, $result);
+        }
+
+        return $result;
     }
 
     /**
-     * Update the related model via a many to many relationship
+     * Update the related model via a has many relationship
      *
-     * @param \EdStevo\Generators\Dao\DaoModel   $model
-     * @param string                                $relation
-     * @param array                                 $data
-     * @param int                                   $id
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     * @param array                            $data
      *
-     * @return mixed
+     * @return bool
      */
-    private function updateRelationBelongsToMany(DaoModel $model, string $relation, array $data, $id, string $attribute) : bool
+    private function updateRelationHasMany(DaoModel $model, string $relationship, DaoModel $relation, array $data) : bool
     {
-        return $model->$relation()->where($attribute, $id)->first()->update($data);
+        return $model->$relationship()->where($relation->getIdField(), $relation->getId())->first()->update($data);
+    }
+
+    /**
+     * Update the related model via a belongs to many relationship
+     *
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     * @param array                            $data
+     *
+     * @return bool
+     */
+    private function updateRelationBelongsToMany(DaoModel $model, string $relationship, DaoModel $relation, array $data) : bool
+    {
+        return $model->$relationship()->where($relation->getIdField(), $relation->getId())->first()->update($data);
     }
 
     /**
      * Update the related model via a polymorphic relationship
      *
-     * @param \EdStevo\Generators\Dao\DaoModel   $model
-     * @param string                                $relation
-     * @param array                                 $data
-     * @param int                                   $id
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     * @param array                            $data
      *
-     * @return mixed
+     * @return bool
      */
-    private function updateRelationMorphMany(DaoModel $model, string $relation, array $data, $id, string $attribute)
+    private function updateRelationMorphMany(DaoModel $model, string $relationship, DaoModel $relation, array $data) : bool
     {
-        return $model->$relation()->where($attribute, $id)->first()->update($data);
+        return $model->$relationship()->where($relation->getIdField(), $relation->getId())->first()->update($data);
     }
 
     /**

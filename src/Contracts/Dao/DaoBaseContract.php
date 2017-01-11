@@ -7,7 +7,6 @@
 namespace EdStevo\Generators\Contracts\Dao;
 
 use EdStevo\Generators\Dao\DaoModel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 interface DaoBaseContract
@@ -90,13 +89,13 @@ interface DaoBaseContract
     /**
      * Update the specified resource in the DB.
      *
-     * @param array  $data
-     * @param int    $id
+     * @param \EdStevo\Generators\Dao\DaoModel  $model
+     * @param array     $data
      * @param string $attribute
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function update(array $data, $id, string $attribute = null) : DaoModel;
+    public function update(DaoModel $model, array $data) : DaoModel;
 
     /**
      * Remove an entry for the specified resource from the DB.
@@ -132,25 +131,24 @@ interface DaoBaseContract
      * Put a new resource in storage that is related to another resource
      *
      * @param \EdStevo\Generators\Dao\DaoModel $model
-     * @param string                           $relation
+     * @param string                           $relationship
      * @param array                            $data
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function storeRelation(DaoModel $model, string $relation, array $data = []) : DaoModel;
+    public function storeRelation(DaoModel $model, string $relationship, array $data = []) : DaoModel;
 
     /**
      * Update a relation of the model
      *
-     * @param \EdStevo\Generators\Dao\DaoModel   $model
-     * @param string                                $relation
-     * @param array                                 $data
-     * @param null                                  $id
-     * @param string                                $attribute
+     * @param \EdStevo\Generators\Dao\DaoModel $model
+     * @param string                           $relationship
+     * @param \EdStevo\Generators\Dao\DaoModel $relation
+     * @param array                            $data
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function updateRelation(DaoModel $model, string $relation, array $data, $id = null, string $attribute = null) : DaoModel;
+    public function updateRelation(DaoModel $model, string $relationship, DaoModel $relation, array $data) : DaoModel;
 
     /**
      * Destroy a relation and fire an event attached with this model
