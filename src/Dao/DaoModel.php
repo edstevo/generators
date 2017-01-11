@@ -43,11 +43,11 @@ abstract class DaoModel extends Model
     /**
      * Expressive way to use the destroy method via dao repository
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function daoUpdate(array $data = []) : Model
+    public function daoUpdate(array $data = []) : DaoModel
     {
-        return $this->getDaoRepository()->update($data, $this->getId(), $this->getIdField());
+        return $this->getDaoRepository()->update($this, $data);
     }
 
     /**
@@ -91,9 +91,9 @@ abstract class DaoModel extends Model
      * @param string $relation
      * @param array  $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function storeRelationship(string $relation, array $data = []) : Model
+    public function storeRelationship(string $relation, array $data = []) : DaoModel
     {
         return $this->getDaoRepository()->storeRelation($this, $relation, $data);
     }
@@ -104,9 +104,9 @@ abstract class DaoModel extends Model
      * @param string $relation
      * @param array  $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function updateRelationship(string $relation, array $data = [], $id, $attribute = 'id') : Model
+    public function updateRelationship(string $relation, array $data = [], $id, $attribute = 'id') : DaoModel
     {
         return $this->getDaoRepository()->updateRelation($this, $relation, $data, $id, $attribute);
     }
@@ -128,7 +128,7 @@ abstract class DaoModel extends Model
      * Expressive way to use the attach method with this model via the dao repository
      *
      * @param string                              $relation
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param \EdStevo\Generators\Dao\DaoModel $model
      * @param array                               $pivotData
      */
     public function attach(string $relation, Model $model, array $pivotData = [])
