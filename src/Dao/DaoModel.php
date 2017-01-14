@@ -101,14 +101,15 @@ abstract class DaoModel extends Model
     /**
      * Expressive way to use the update relation method with this model via the dao repository
      *
-     * @param string $relation
+     * @param string $relationship
+     * @param DaoModel $relation
      * @param array  $data
      *
      * @return \EdStevo\Generators\Dao\DaoModel
      */
-    public function updateRelationship(string $relation, array $data = [], $id, $attribute = 'id') : DaoModel
+    public function updateRelationship(string $relationship, DaoModel $relation, array $data = []) : DaoModel
     {
-        return $this->getDaoRepository()->updateRelation($this, $relation, $data, $id, $attribute);
+        return $this->getDaoRepository()->updateRelation($this, $relationship, $relation, $data);
     }
 
     /**
