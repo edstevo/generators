@@ -292,17 +292,17 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     {
         $data       = $this->cleanData($data, $relation);
 
-        if ($model->$relation() instanceof HasMany)
+        if ($model->$relationship() instanceof HasMany)
         {
             $this->updateRelationHasMany($model, $relationship, $relation, $data);
         }
 
-        if ($model->$relation() instanceof BelongsToMany)
+        if ($model->$relationship() instanceof BelongsToMany)
         {
             $this->updateRelationBelongsToMany($model, $relationship, $relation, $data);
         }
 
-        if ($model->$relation() instanceof MorphMany)
+        if ($model->$relationship() instanceof MorphMany)
         {
             $this->updateRelationMorphMany($model, $relationship, $relation, $data);
         }
