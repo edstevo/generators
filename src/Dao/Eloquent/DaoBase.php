@@ -309,7 +309,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 
         $updatedRelation    = $this->getRelationWhere($model, $relationship, [$relation->getIdField() => $relation->getId()])->first();
 
-        if (!in_array($relation, $this->skipEventsForRelationships))
+        if (!in_array($relationship, $this->skipEventsForRelationships))
         {
             $this->fireModelEvent("Updated", $model, $updatedRelation);
         }
