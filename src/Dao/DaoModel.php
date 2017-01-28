@@ -31,6 +31,16 @@ abstract class DaoModel extends Model
     abstract function getId();
 
     /**
+     * Get the visual identifier for this model
+     *
+     * @return mixed
+     */
+    public function getVisualId()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Get the field used as an identifier for this model
      *
      * @return string
