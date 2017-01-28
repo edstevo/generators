@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContract, GeneratorContract
 {
@@ -422,7 +423,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      */
     public function attach(DaoModel $model, string $relationship, DaoModel $relation, array $pivot_data = [])
     {
-        $result         = $model->$relationship()->attach($relation->id, $pivot_data);
+        $result         = $model->$relationship()->attach($relation->getId(), $pivot_data);
 
         if (!in_array($relationship, $this->skipEventsForRelationships))
         {
@@ -480,7 +481,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
      */
     public function detach(DaoModel $model, string $relationship, DaoModel $relation) : bool
     {
-        $result         = $model->$relationship()->detach($relation->id);
+        $result         = $model->$relationship()->detach($relation->getId());
 
         if (!in_array($relationship, $this->skipEventsForRelationships))
         {
