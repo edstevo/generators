@@ -343,6 +343,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
         }
 
         return $result;
+
     }
 
     /**
