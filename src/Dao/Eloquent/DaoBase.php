@@ -206,6 +206,22 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
     }
 
     /**
+     * Retrieve multiple entries of the resource from the DB where it doesn't matches an attribute
+     *
+     * @param  array  $ids
+     * @param  string  $attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function whereNotIn(array $ids, string $attribute = null)
+    {
+        $attribute  = ($attribute) ?: $this->model->getIdField();
+
+        $this->applyCriteria();
+        return $this->model->whereNotIn($attribute, $ids)->get();
+    }
+
+    /**
      * Update the specified resource in the DB.
      *
      * @param \EdStevo\Generators\Dao\DaoModel  $model
