@@ -219,6 +219,7 @@ abstract class DaoBase implements CriteriaContract, DaoBaseContract, EventsContr
 
         $this->applyCriteria();
         return $this->model->whereNotIn($attribute, $ids)->get();
+
     }
 
     /**
